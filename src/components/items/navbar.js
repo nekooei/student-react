@@ -13,6 +13,7 @@ import {withStyles} from 'material-ui/styles';
 const styles = {
   root: {
     width: '100%',
+    marginBottom : 60
   },
   flex: {
     flex: 1,
