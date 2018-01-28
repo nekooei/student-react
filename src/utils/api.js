@@ -25,3 +25,12 @@ export const checkRegistration = nationalCode => (
     }
   ).then(data => data.json())
 );
+
+export const checkToken = () => (
+  fetch(
+    getUrl('checkToken'),
+    {
+      headers: getHeaders(true)
+    }
+  ).then(data => data.json())
+);
