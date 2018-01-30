@@ -18,5 +18,7 @@ export default (state = initState , action) => {
       };
     case DELETE_LOGIN_TOKEN:
       return {};
+    default:
+      return state;
   }
 }

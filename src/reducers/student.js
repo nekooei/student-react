@@ -14,5 +14,7 @@ export default (state = initState, action) => {
       return action.payload;
     case REMOVE_STUDENT_INFO:
       return {};
+    default:
+        return state;
   }
 }
