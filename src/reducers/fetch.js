@@ -6,7 +6,7 @@ import  {
   CANCEL_FETCHING
 } from '../actions/constants';
 
-const initState = { };
+const initState = false;
 
 export default (state = initState, action) => {
   switch (action.type){
