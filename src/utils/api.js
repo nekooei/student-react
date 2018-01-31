@@ -30,6 +30,17 @@ export const checkToken = () => (
   fetch(
     getUrl('checkToken'),
     {
+      method: 'GET',
+      headers: getHeaders(true)
+    }
+  ).then(data => data.json())
+);
+
+export const getStudentInfo = () => (
+  fetch(
+    getUrl('info'),
+    {
+      method: 'GET',
       headers: getHeaders(true)
     }
   ).then(data => data.json())
