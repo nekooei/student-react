@@ -2,7 +2,7 @@
  * Created by milad on 1/28/18.
  */
 import React, {Component} from 'react';
-//import {connect} from 'react-redux';
+import {connect} from 'react-redux';
 import {
   AppBar,
   Toolbar, Typography,
@@ -12,30 +12,29 @@ import {withStyles} from 'material-ui/styles';
 
 const styles = {
   root: {
-    width: '100%',
-    marginBottom : 60
+    width: '100%'
   },
   flex: {
     flex: 1,
   }
-}
+};
 
 class NavBar extends Component {
-  state = {
-    fetching : false
-  };
 
   render() {
     const {classes} = this.props;
     return (
       <div className={classes.root}>
-        <AppBar position={'fixed'}>
+        <AppBar>
           <Toolbar>
-            <Typography type="title" color="inherit"  classes={classes.flex}>
+            <Typography type="title" color="inherit"  className={classes.flex}>
               دانش آموز
             </Typography>
+            <Typography type="subheading" color="inherit" className={classes.flex}>
+              ورود
+            </Typography>
           </Toolbar>
-          {this.state.fetching ? (
+          {this.props.fetching ? (
             <LinearProgress mode='query' color='primary'/>
           ) : undefined}
         </AppBar>
@@ -45,7 +44,6 @@ class NavBar extends Component {
 }
 
 
-/*
 function mapStateToProps(state) {
   return {
     fetching : state.fetching
@@ -54,6 +52,5 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return dispatch;
 }
-*/
 
-export default withStyles(styles)(NavBar);
+export default connect(mapStateToProps)(withStyles(styles)(NavBar));
