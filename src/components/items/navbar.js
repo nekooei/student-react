@@ -35,7 +35,7 @@ class NavBar extends Component {
             </Typography>
           </Toolbar>
           {this.props.fetching ? (
-            <LinearProgress mode='query' color='primary'/>
+            <LinearProgress mode='query' color='secondary'/>
           ) : undefined}
         </AppBar>
       </div>
@@ -49,8 +49,6 @@ function mapStateToProps(state) {
     fetching : state.fetching
   };
 }
-function mapDispatchToProps(dispatch) {
-  return dispatch;
-}
+
 
 export default connect(mapStateToProps)(withStyles(styles)(NavBar));
