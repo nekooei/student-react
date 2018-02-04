@@ -13,6 +13,7 @@ import {createStore, applyMiddleware, compose} from 'redux';
 import reducers from './reducers';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
+import {deepOrange, purple} from 'material-ui/colors';
 
 const jss = create({ plugins: [...jssPreset().plugins, rtl()] });
 const generateClassName = createGenerateClassName();
@@ -27,7 +28,16 @@ const store = createStore(
 );
 
 const theme = createMuiTheme({
-  direction : 'rtl'
+  direction : 'rtl',
+  palette:{
+    primary: deepOrange,
+    secondary: {
+      main: purple[900]
+    }
+  },
+  typography:{
+    fontFamily: 'vazir'
+  }
 });
 
 ReactDOM.render(
