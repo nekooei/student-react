@@ -1,5 +1,31 @@
+@font-face {
+  font-family: 'vazir';
+  font-style: normal;
+  font-weight: 400;
+  src: url('fonts/Vazir-FD.eot'); /* IE9 Compat Modes */
+  src: local('Open Sans'), local('OpenSans'),
+  url('fonts/Vazir-FD.eot') format('embedded-opentype'), /* IE6-IE8 */
+  url('fonts/Vazir-FD.woff2') format('woff2'), /* Super Modern Browsers */
+  url('fonts/Vazir-FD.woff') format('woff'), /* Modern Browsers */
+  url('fonts/Vazir-FD.ttf') format('truetype') /* Safari, Android, iOS */
+
+}
+
+@font-face {
+  font-family: 'vazir bold';
+  font-style: normal;
+  font-weight: 400;
+  src: url('fonts/Vazir-Bold-FD.eot'); /* IE9 Compat Modes */
+  src: local('Open Sans'), local('OpenSans'),
+  url('fonts/Vazir-Bold-FD.eot') format('embedded-opentype'), /* IE6-IE8 */
+  url('fonts/Vazir-Bold-FD.woff2') format('woff2'), /* Super Modern Browsers */
+  url('fonts/Vazir-Bold-FD.woff') format('woff'), /* Modern Browsers */
+  url('fonts/Vazir-Bold-FD.ttf') format('truetype') /* Safari, Android, iOS */
+
+}
+
 body {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
+  font-family: 'vazir';
 }
