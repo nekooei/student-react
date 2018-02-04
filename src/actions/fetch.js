@@ -4,18 +4,14 @@
 import * as C from './constants';
 
 
-export const setFetching = () => dispatch => {
-  dispatch(
+export const setFetching = ()  => (
     {
       type: C.FETCHING
     }
   );
-};
 
-export const cancelFetching = () => dispatch => {
-  dispatch(
+export const cancelFetching = () => (
     {
       type: C.CANCEL_FETCHING
     }
   );
-};
