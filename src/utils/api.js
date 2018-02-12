@@ -16,7 +16,7 @@ const getHeaders = (withAuth) => (
 
 export const checkRegistration = nationalCode => (
   fetch(
-    getUrl('checkRegistration'),
+    getUrl('student/checkRegister'),
     {
       method : 'POST',
       headers : getHeaders(false),
@@ -29,7 +29,7 @@ export const checkRegistration = nationalCode => (
 
 export const checkToken = () => (
   fetch(
-    getUrl('checkToken'),
+    getUrl('student/checkToken'),
     {
       method: 'GET',
       headers: getHeaders(true)
@@ -39,7 +39,7 @@ export const checkToken = () => (
 
 export const getStudentInfo = () => (
   fetch(
-    getUrl('info'),
+    getUrl('student/info'),
     {
       method: 'GET',
       headers: getHeaders(true)
