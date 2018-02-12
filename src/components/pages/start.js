@@ -13,6 +13,12 @@ import {
 import {
   withStyles
 } from 'material-ui/styles';
+import {connect} from "react-redux";
+import {
+  setFetching,
+  cancelFetching
+}from '../../actions/fetch';
+import {checkRegistration} from '../../utils/api';
 
 const style = {
   form: {
@@ -21,8 +27,29 @@ const style = {
 };
 
 class StartPage extends Component {
+  constructor(props) {
+    super(props);
+    this.loginClick = this.loginClick.bind(this);
+    this.state = {
+      isRegistered: false
+    }
+  }
+
+  loginClick() {
+    checkRegistration(this.nationalCodeInput.value)
+      .then(res => {
+        if(res.success){
+
+        }else if (res.error){
+          this.props.history.push('/register');
+        }
+      }).catch(err => {
+      console.log(err);
+    });
+  }
+
   render() {
-    const { classes } = this.props;
+    const {classes} = this.props;
     return (
       <div>
         <Grid container
@@ -37,7 +64,7 @@ class StartPage extends Component {
                     alignItems="center"
                     justify="center">
                 <Avatar src={'http://www.newsshare.in/wp-content/uploads/2017/04/Miniclip-8-Ball-Pool-Avatar-16.png'}
-                        style={{ width: 60, height : 60, alignment: 'center' }}
+                        style={{width: 75, height: 75, alignment: 'center'}}
                 />
 
               </Grid>
@@ -45,9 +72,20 @@ class StartPage extends Component {
                     direction="row"
                     alignItems="center" spacing={0}
                     justify="center">
-                <Grid item xs={10}  className={classes.form}>
-                  <TextField label='کدملی' style={{ width : '100%', margin: 20 }} />
-                  <Button raised color='primary'>بعدی</Button>
+                <Grid item xs={10} className={classes.form}>
+                  <Grid container
+                        direction='column'
+                        alignItems='center'
+                        justify='center'>
+                    <TextField inputRef={input => this.nationalCodeInput = input} label='کدملی'
+                               style={{width: '100%', margin: 20}}/>
+                    {this.state.isRegister ? (
+                      <TextField type='password' inputRef={input => this.nationalCodeInput = input} label='رمز عبور'
+                                 style={{width: '100%', margin: 20}}/>
+                    ) : <div/>}
+                    <Button raised color='primary' onClick={this.loginClick}>بعدی</Button>
+                  </Grid>
+
                 </Grid>
               </Grid>
 
@@ -63,4 +101,17 @@ class StartPage extends Component {
 StartPage.propTypes = {};
 StartPage.defaultProps = {};
 
-export default withStyles(style)(StartPage);
+function mapStateToProps(state) {
+  return {
+    ...state
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    setFetching: () => dispatch(setFetching()),
+    cancelFetching: () => dispatch(cancelFetching())
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(style)(StartPage));
