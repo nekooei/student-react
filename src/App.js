@@ -3,6 +3,7 @@ import './App.css';
 import { Grid } from 'material-ui';
 import NavBar from './components/items/navbar';
 import StartPage from './components/pages/start';
+import RegisterPage from './components/pages/register';
 import {withStyles } from 'material-ui/styles'
 
 import {Route, Switch} from "react-router-dom";
@@ -24,6 +25,7 @@ class App extends Component {
           <Grid item xs={12}>
             <Switch>
               <Route exact path='/' component={StartPage} />
+              <Route path='/register' component={RegisterPage}/>
             </Switch>
           </Grid>
         </Grid>
