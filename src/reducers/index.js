@@ -6,9 +6,11 @@ import { combineReducers } from 'redux';
 import FetchReducer from './fetch';
 import LoginReducer from './login';
 import StudentReducer from './student';
+import HeaderReducer from './header';
 
 export default combineReducers({
   fetching : FetchReducer,
   student: StudentReducer,
-  loginInfo : LoginReducer
+  loginInfo : LoginReducer,
+  header : HeaderReducer
 });
