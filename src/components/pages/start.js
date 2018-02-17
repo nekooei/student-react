@@ -18,9 +18,27 @@ import {
   setFetching,
   cancelFetching
 }from '../../actions/fetch';
+
+import  {
+  setHeaderSubTitle
+} from '../../actions/header';
 import {checkRegistration} from '../../utils/api';
 
+import {
+  fillRequired,
+  isNationalCode,
+  isNumber,
+  passwordStrong
+}from '../../utils/validators';
+
+
 const style = {
+  mainPanel: {
+    marginTop: '30px'
+  },
+  content: {
+    padding: '20px'
+  },
   form: {
     padding: 10
   }
@@ -29,36 +47,103 @@ const style = {
 class StartPage extends Component {
   constructor(props) {
     super(props);
-    this.loginClick = this.loginClick.bind(this);
+    this.nextStep = this.nextStep.bind(this);
     this.state = {
-      isRegistered: false
+      isRegistered: false,
+      step: {
+        registerChecked: false,
+        registration: false
+      },
+      errors: {
+        emailError: {
+          hasError: false,
+          errorMsg: ''
+        }
+      }
     }
   }
 
-  loginClick() {
-    checkRegistration(this.nationalCodeInput.value)
-      .then(res => {
-        if(res.success){
+  componentDidMount() {
+    this.props.setSubtitleOfHeader('ورود');
+  }
 
-        }else if (res.error){
-          this.props.history.push('/register');
-        }
-      }).catch(err => {
-      console.log(err);
-    });
+
+  handleChangeInput = inputRef => {
+
+  };
+
+  nextStep() {
+    if (!this.state.step.registerChecked) {
+      if (!this.nationalCodeInput.value) {
+        this.setState(prevState => {
+          return {
+            ...prevState,
+            errors: {
+              ...prevState.errors,
+              emailError: {
+                hasError: true,
+                errorMsg: 'این فیلد نمی‌تواند خالی باشد.'
+              }
+            }
+          }
+        });
+        return;
+      }else if (!isNumber(this.nationalCodeInput.value) || !isNationalCode(this.nationalCodeInput.value)){
+        this.setState(prevState => {
+          return {
+            ...prevState,
+            errors: {
+              ...prevState.errors,
+              emailError: {
+                hasError: true,
+                errorMsg: 'کد ملی معتبر نمی باشد!'
+              }
+            }
+          }
+        });
+        return;
+      }
+      this.props.setFetching();
+      // here validated nationalCode field
+      checkRegistration(this.nationalCodeInput.value)
+        .then(res => {
+          this.props.cancelFetching();
+          if (res.success) {
+            this.setState(prevState => {
+              return{
+                ...prevState,
+                isRegistered: true,
+                step : {
+                  ...[prevState.step],
+                  registerChecked : true,
+                  registration: false
+                }
+              }
+            })
+          } else if (res.error) {
+            this.props.history.push('/register');
+          }
+        }).catch(err => {
+        console.log(err);
+      });
+    }else if(this.state.step.registerChecked && this.state.isRegistered){
+      //todo : do login here
+    }
+
+
   }
 
   render() {
     const {classes} = this.props;
     return (
-      <div>
+      <div className={classes.mainPanel}>
         <Grid container
               direction="row"
               alignItems="center"
               justify="center">
           <Grid
             item xs={4}>
-            <Paper>
+            <Paper elevation={20}>
               <Grid container
                     direction="column"
                     alignItems="center"
@@ -77,13 +162,16 @@ class StartPage extends Component {
                         direction='column'
                         alignItems='center'
                         justify='center'>
-                    <TextField inputRef={input => this.nationalCodeInput = input} label='کدملی'
+                    <TextField error={this.state.errors.emailError.hasError}
+                               type="number"
+                               helperText={this.state.errors.emailError.hasError ? this.state.errors.emailError.errorMsg : ''}
+                               inputRef={input => this.nationalCodeInput = input} label='کدملی'
                                style={{width: '100%', margin: 20}}/>
-                    {this.state.isRegister ? (
-                      <TextField type='password' inputRef={input => this.nationalCodeInput = input} label='رمز عبور'
+                    {this.state.isRegistered ? (
+                      <TextField type='password' inputRef={input => this.passwordInput = input} label='رمز عبور'
                                  style={{width: '100%', margin: 20}}/>
-                    ) : <div/>}
-                    <Button raised color='primary' onClick={this.loginClick}>بعدی</Button>
+                    ) : null}
+                    <Button raised color='primary' onClick={this.nextStep}>بعدی</Button>
                   </Grid>
 
                 </Grid>
@@ -110,7 +198,8 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     setFetching: () => dispatch(setFetching()),
-    cancelFetching: () => dispatch(cancelFetching())
+    cancelFetching: () => dispatch(cancelFetching()),
+    setSubtitleOfHeader: subtitle => dispatch(setHeaderSubTitle(subtitle))
   }
 }
 
