@@ -6,6 +6,8 @@ import PropTypes from 'prop-types';
 import {Button, Grid, Paper, TextField, Typography, withStyles} from "material-ui";
 import Stepper, {Step, StepLabel, StepButton} from 'material-ui/Stepper';
 import {connect} from "react-redux";
+import {cancelFetching, setFetching} from "../../actions/fetch";
+import {setHeaderSubTitle} from "../../actions/header";
 
 const style = {
   form: {
@@ -44,6 +46,10 @@ class Register extends Component {
     completed: new Set(),
     skipped: new Set()
   };
+
+  componentDidMount(){
+    this.props.setSubtitleOfHeader('ثبت نام')
+  }
 
   totalSteps = () => {
     return getSteps().length;
@@ -226,7 +232,9 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-
+    setFetching: () => dispatch(setFetching()),
+    cancelFetching: () => dispatch(cancelFetching()),
+    setSubtitleOfHeader : subtitle => dispatch(setHeaderSubTitle(subtitle))
   }
 }
 
