@@ -31,7 +31,7 @@ class NavBar extends Component {
               دانش آموز
             </Typography>
             <Typography type="subheading" color="inherit" className={classes.flex}>
-              ورود
+              {this.props.header.subtitle}
             </Typography>
           </Toolbar>
           {this.props.fetching ? (
@@ -46,7 +46,8 @@ class NavBar extends Component {
 
 function mapStateToProps(state) {
   return {
-    fetching : state.fetching
+    fetching : state.fetching,
+    header : state.header
   };
 }
 
