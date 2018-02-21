@@ -3,49 +3,159 @@
  */
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Button, Grid, Paper, TextField, Typography, withStyles} from "material-ui";
+import {
+  Button, Grid, Paper, TextField, Typography, withStyles, Switch, FormGroup, Divider,
+  FormControl, FormControlLabel} from "material-ui";
 import Stepper, {Step, StepLabel, StepButton} from 'material-ui/Stepper';
 import {connect} from "react-redux";
 import {cancelFetching, setFetching} from "../../actions/fetch";
 import {setHeaderSubTitle} from "../../actions/header";
+import GenderSelector from "../items/GenderSelector";
+import { TimePicker, DateTimePicker, DatePicker } from 'material-ui-pickers';
+import jalaliUtils from 'material-ui-pickers-jalali-utils';
+import jMoment from 'jalali-moment';
 
-const style = {
+
+
+const style = theme => ({
   form: {
     padding: 10
   },
+  container: {
+    padding: 30
+  },
   stepper : {
     width: '100%'
+  },
+  datePicker :{
+    marginTop : 35,
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    width: 400,
+
+  },
+  fixWidth: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    width: 400,
   }
-};
+});
 
 function getSteps() {
   return [
     'اطلاعات پایه',
     'اطلاعات کاربری',
-    'آدرس'
+    'آدرس سکونت'
   ];
 }
 
-function getStepContent(step) {
-  switch (step) {
-    case 0:
-      return 'Step 1: Select campaign settings...';
-    case 1:
-      return 'Step 2: What is an ad group anyways?';
-    case 2:
-      return 'Step 3: This is the bit I really care about!';
-    default:
-      return 'Unknown step';
-  }
-}
+
 
 class Register extends Component {
+
+  constructor(props){
+    super(props);
+    this.handleDateChange = this.handleDateChange.bind(this);
+
+  }
 
   state = {
     activeStep : 0,
     completed: new Set(),
-    skipped: new Set()
+    skipped: new Set(),
+    selectedDate: new Date()
   };
+
+  handleDateChange(date){
+    console.log(date);
+    this.setState({
+      selectedDate: date
+    });
+  }
+
+  getStepContent(step) {
+    const {classes} = this.props;
+    switch (step) {
+      case 0:
+        // render form for basic information
+        return (
+          <div className={classes.container}>
+            <Grid container>
+              <FormGroup >
+                <FormControl className={classes.fixWidth} >
+                  <FormControlLabel control={<TextField inputRef={inputRef => Register.firstNameRef = inputRef}
+                                                        label={'نام'} style={{width: '100%', margin: 20}}/>}/>
+                </FormControl>
+                <FormControl className={classes.fixWidth}>
+                  <FormControlLabel control={ <TextField inputRef={inputRef => Register.lastNameRef = inputRef}
+                                                         label={'نام خانوادگی'} style={{width: '100%', margin: 20}}/>}/>
+                </FormControl>
+                <FormControl className={classes.fixWidth}>
+                  <FormControlLabel disabled control={ <TextField inputRef={inputRef => Register.lastNameRef = inputRef}
+                                                                  label={'کدملی'} style={{width: '100%', margin: 20}} value="۲۲۸۱۸۳۴۹۹۹"/>}/>
+                </FormControl>
+                <FormControl className={classes.fixWidth}>
+                  <GenderSelector getGenderSelected={(gender) => Register.genderSelected = gender}/>
+                </FormControl>
+
+                <FormControl className={classes.datePicker} >
+                  <FormControlLabel  control={<DatePicker
+                    okLabel="تأیید"
+                    cancelLabel="لغو"
+                    maxDate={Date.now()}
+                    labelFunc={date => date === null  ? '' : jMoment(date).format('jYYYY/jMM/jDD')}
+                    onChange={this.handleDateChange}
+                    value={this.state.selectedDate}
+                    animateYearScrolling
+                    utils={jalaliUtils}
+                  />}/>
+
+                </FormControl>
+                {/*<Grid item xs={4}>
+                 <TextField inputRef={inputRef => Register.firstNameRef = inputRef}
+                 label={'نام'} style={{width: '100%', margin: 20}}/>
+
+                 </Grid>
+                 <Grid item xs={4}>
+                 <TextField inputRef={inputRef => Register.lastNameRef = inputRef}
+                 label={'نام خانوادگی'} style={{width: '100%', margin: 20}}/>
+
+                 </Grid>
+                 <Grid item xs={4}>
+                 <Switch inputRef={inputRef => Register.genderRef = inputRef} />
+
+                 </Grid>*/}
+              </FormGroup>
+
+            </Grid>
+          </div>
+        );
+      case 1:
+        // render form for user information
+        return (
+          <div>
+            <Grid container>
+              <Grid item xs={12}>
+                <h1>Hello cocksucker bitch</h1>
+              </Grid>
+            </Grid>
+          </div>
+        );
+      case 2:
+        // render form for address information
+        return (
+          <div>
+            <Grid container>
+              <Grid item xs={12}>
+                <h1>Hello dicklover bitch</h1>
+              </Grid>
+            </Grid>
+          </div>
+        );
+      default:
+        return this.getStepContent(0);
+    }
+  }
 
   componentDidMount(){
     this.props.setSubtitleOfHeader('ثبت نام')
@@ -204,9 +314,20 @@ class Register extends Component {
                             </Step>
                           );
                       }
-                      )}
 
+                      )}
                     </Stepper>
+                    <Divider light />
+                    <Grid container
+                          direction="column"
+                          alignItems="center"
+                          justify="center">
+                      <Grid item xs={6}>
+                        {this.state.activeStep !== steps.length ? (
+                          this.getStepContent(this.state.activeStep)
+                        ): null}
+                      </Grid>
+                    </Grid>
                   </Grid>
 
                 </Grid>
@@ -221,7 +342,9 @@ class Register extends Component {
   }
 }
 
-Register.propTypes = {};
+Register.propTypes = {
+  nationalCode : PropTypes.number
+};
 Register.defaultProps = {};
 
 function mapStateToProps(state) {
