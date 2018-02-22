@@ -41,6 +41,7 @@ class GenderSelector extends Component {
     this.props.getGenderSelected(event.target.value);
   };
   render() {
+    const {getGenderSelected , ...others} = this.props;
     const { classes } = this.props;
     return (
       <TextField
@@ -48,13 +49,13 @@ class GenderSelector extends Component {
         select
         label={'جنسیت'}
         className={classes.textField}
-        value={this.state.gender}
         onChange={this.handleChange('gender')}
         SelectProps={{
           MenuProps: {
             className: classes.menu,
           },
         }}
+        {...others}
         margin="normal"
       >
         {currencies.map(option => (
