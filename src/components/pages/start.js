@@ -2,7 +2,7 @@
  * Created by milad on 1/28/18.
  */
 import React, {Component} from 'react';
-//import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import {
   Avatar,
   Grid,
@@ -121,6 +121,7 @@ class StartPage extends Component {
               }
             })
           } else if (res.error) {
+            this.props.setNationalCodeFun(this.nationalCodeInput.value);
             this.props.history.push('/register');
           }
         }).catch(err => {
@@ -142,7 +143,7 @@ class StartPage extends Component {
               alignItems="center"
               justify="center">
           <Grid
-            item xs={4}>
+            item xs={10} md={4} lg={4}>
             <Paper elevation={20}>
               <Grid container
                     direction="column"
@@ -186,7 +187,9 @@ class StartPage extends Component {
   }
 }
 
-StartPage.propTypes = {};
+StartPage.propTypes = {
+  setNationalCodeFun : PropTypes.func
+};
 StartPage.defaultProps = {};
 
 function mapStateToProps(state) {
