@@ -261,12 +261,14 @@ class Register extends Component {
                   <FormControlLabel control={ <TextField  type="email"
                                                          onChange={(event) => this.emailChange(event.target.value)}
                                                          value={this.state.userInformation.email}
+                                                          defaultValue={''}
                                                          label={'ایمیل'} className={classes.input} />}/>
                 </FormControl>
                 <FormControl fullWidth >
                   <FormControlLabel control={ <TextField  type="password"
                                                          onChange={(event) => this.passwordChange(event.target.value)}
                                                          value={this.state.userInformation.password}
+                                                          defaultValue={''}
                                                          label={'رمز عبور'} className={classes.input} />}/>
                 </FormControl>
               </Grid>
@@ -362,6 +364,10 @@ class Register extends Component {
     return basicInformation.fullName.length > 0 && basicInformation.birthDate.length > 0 && basicInformation.birthPlace.length > 0 &&
       (basicInformation.gender == 0 || basicInformation.gender == 1) && basicInformation.nationalCode.length > 0
   }
+  isUserInformationValid(){
+    const {userInformation} = this.state;
+    return userInformation.email.length > 0 && userInformation.password.length > 0 && userInformation.username.length > 0
+  }
 
   handleComplete = () => {
     switch(this.state.activeStep){
@@ -371,7 +377,12 @@ class Register extends Component {
           return;
         }
         break;
+
       case 1:
+        if(!this.isUserInformationValid()){
+          //todo : raise error like toast or snackbar
+          return;
+        }
         break;
       case 2:
         break;
@@ -467,7 +478,6 @@ class Register extends Component {
                           return (
                             <Step key={label} {...props}>
                               <StepButton
-                                onClick={this.handleStep(index)}
                                 completed={this.isStepComplete(index)}
                                 {...buttonProps}
                               >
@@ -490,13 +500,6 @@ class Register extends Component {
                         ): null}
                       </Grid>
                       <div>
-                        <Button
-                          disabled={this.state.activeStep === 0}
-                          onClick={this.handleBack}
-                          className={classes.button}
-                        >
-                          قبلی
-                        </Button>
                         {this.state.activeStep !== steps.length &&
                         (this.state.completed.has(this.state.activeStep) ? (
                           null
