@@ -153,79 +153,63 @@ class Register extends Component {
             <Grid container>
               <Grid item
                     xs={12}>
-                <FormGroup >
-                  <FormControl fullWidth >
-                    <FormControlLabel control={<TextField inputRef={inputRef => this.firstNameRef = inputRef}
-                                                          onChange={(event) => this.fullNameChange()}
-                                                          value={this.state.basicInformation.fullName.split(' ')[0]}
-                                                          label={'نام'} className={classes.input}/>}/>
-                  </FormControl>
-                  <FormControl fullWidth>
-                    <FormControlLabel control={ <TextField inputRef={inputRef => this.lastNameRef = inputRef}
-                                                           onChange={(event) => this.fullNameChange()}
-                                                           value={this.state.basicInformation.fullName.split(' ')[1]}
-                                                           label={'نام خانوادگی'} className={classes.input}/>}/>
-                  </FormControl>
-                  <FormControl fullWidth >
-                    <FormControlLabel disabled control={ <TextField
-                                                                    label={'کدملی'} className={classes.input}
-                                                                    value={this.state.basicInformation.nationalCode}/>}/>
-                  </FormControl>
-                  <FormControl fullWidth required >
-                    <GenderSelector value={this.state.basicInformation.gender} getGenderSelected={(gender) => this.changeGender(gender)}/>
-                  </FormControl>
-                  <FormControl fullWidth >
-                    <FormControlLabel control={ <TextField inputRef={inputRef => this.birthPlaceRef = inputRef}
-                                                           onChange={(event) => this.birthPlaceChange()}
-                                                           value={this.state.basicInformation.birthPlace}
-                                                                    label={'محل تولد'} className={classes.input} />}/>
-                  </FormControl>
-                  <FormControl fullWidth required className={classes.datePicker} >
-                    <FormControlLabel  control={
-                      <DatePicker
-                        okLabel="تأیید"
-                        label="تاریخ تولد"
-                        className={classes.input}
-                        cancelLabel="لغو"
-                        maxDate={Date.now()}
-                        inputRef={inputRef => this.birthDateRef = inputRef}
-                        labelFunc={date => date === null  ? '' : jMoment(date).format('jYYYY/jMM/jDD')}
-                        onChange={this.handleDateChange}
-                        value={this.state.selectedDate}
-                        animateYearScrolling
-                        utils={jalaliUtils}
-                        InputProps={{
-                          endAdornment: (
-                            <InputAdornment position="start" >
-                              <IconButton className={classes.keyboardIcon}>
-                                <Icon>date_range</Icon>
-                              </IconButton>
-                            </InputAdornment>
-                          ),
-                        }}
-                      />
-                      }/>
+                <FormControl fullWidth >
+                  <FormControlLabel control={<TextField inputRef={inputRef => this.firstNameRef = inputRef}
+                                                        onChange={(event) => this.fullNameChange()}
+                                                        value={this.state.basicInformation.fullName.split(' ')[0]}
+                                                        label={'نام'} className={classes.input}/>}/>
+                </FormControl>
+                <FormControl fullWidth>
+                  <FormControlLabel control={ <TextField inputRef={inputRef => this.lastNameRef = inputRef}
+                                                         onChange={(event) => this.fullNameChange()}
+                                                         value={this.state.basicInformation.fullName.split(' ')[1]}
+                                                         label={'نام خانوادگی'} className={classes.input}/>}/>
+                </FormControl>
+                <FormControl fullWidth >
+                  <FormControlLabel disabled control={ <TextField
+                    label={'کدملی'} className={classes.input}
+                    value={this.state.basicInformation.nationalCode}/>}/>
+                </FormControl>
+                <FormControl fullWidth required >
+                  <GenderSelector value={this.state.basicInformation.gender} getGenderSelected={(gender) => this.changeGender(gender)}/>
+                </FormControl>
+                <FormControl fullWidth >
+                  <FormControlLabel control={ <TextField inputRef={inputRef => this.birthPlaceRef = inputRef}
+                                                         onChange={(event) => this.birthPlaceChange()}
+                                                         value={this.state.basicInformation.birthPlace}
+                                                         label={'محل تولد'} className={classes.input} />}/>
+                </FormControl>
+                <FormControl fullWidth required className={classes.datePicker} >
+                  <FormControlLabel  control={
+                    <DatePicker
+                      okLabel="تأیید"
+                      label="تاریخ تولد"
+                      className={classes.input}
+                      cancelLabel="لغو"
+                      maxDate={Date.now()}
+                      inputRef={inputRef => this.birthDateRef = inputRef}
+                      labelFunc={date => date === null  ? '' : jMoment(date).format('jYYYY/jMM/jDD')}
+                      onChange={this.handleDateChange}
+                      value={this.state.selectedDate}
+                      animateYearScrolling
+                      utils={jalaliUtils}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="start" >
+                            <IconButton className={classes.keyboardIcon}>
+                              <Icon>date_range</Icon>
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  }/>
 
-                  </FormControl>
-                  <FormControl fullWidth >
-                    <FormControlLabel control={ <TextField multiline inputRef={inputRef => Register.descriptionRef = inputRef}
-                                                           label={'توضیحات'} className={classes.input} />}/>
-                  </FormControl>
-                  {/*<Grid item xs={4}>
-                   <TextField inputRef={inputRef => Register.firstNameRef = inputRef}
-                   label={'نام'} style={{width: '100%', margin: 20}}/>
-
-                   </Grid>
-                   <Grid item xs={4}>
-                   <TextField inputRef={inputRef => Register.lastNameRef = inputRef}
-                   label={'نام خانوادگی'} style={{width: '100%', margin: 20}}/>
-
-                   </Grid>
-                   <Grid item xs={4}>
-                   <Switch inputRef={inputRef => Register.genderRef = inputRef} />
-
-                   </Grid>*/}
-                </FormGroup>
+                </FormControl>
+                <FormControl fullWidth >
+                  <FormControlLabel control={ <TextField multiline inputRef={inputRef => Register.descriptionRef = inputRef}
+                                                         label={'توضیحات'} className={classes.input} />}/>
+                </FormControl>
               </Grid>
             </Grid>
           </div>
@@ -236,7 +220,21 @@ class Register extends Component {
           <div>
             <Grid container>
               <Grid item xs={12}>
-                <h1>Hello cocksucker bitch</h1>
+                <FormControl fullWidth >
+                  <FormControlLabel disabled control={ <TextField
+                    label={'نام کاربری'} className={classes.input}
+                    value={this.state.userInformation.username}/>}/>
+                </FormControl>
+                <FormControl fullWidth >
+                  <FormControlLabel control={ <TextField inputRef={inputRef => this.emailRef = inputRef} type="email"
+
+                                                         label={'ایمیل'} className={classes.input} />}/>
+                </FormControl>
+                <FormControl fullWidth >
+                  <FormControlLabel control={ <TextField inputRef={inputRef => this.passwordRef = inputRef} type="password"
+
+                                                         label={'رمز عبور'} className={classes.input} />}/>
+                </FormControl>
               </Grid>
             </Grid>
           </div>
