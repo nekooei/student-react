@@ -10,10 +10,10 @@ const styles = theme => ({
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
-    width: 360,
+    width: '85%',
   },
   menu: {
-    width: 360,
+    width: '85%',
   },
 });
 
