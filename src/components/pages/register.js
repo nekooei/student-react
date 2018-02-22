@@ -117,6 +117,18 @@ class Register extends Component {
     ))
   }
 
+  descriptionChange(){
+    this.setState(prevState => (
+      {
+        ...prevState,
+        basicInformation: {
+          ...prevState.basicInformation,
+          description: this.descriptionRef.value
+        }
+      }
+    ))
+  }
+
   changeGender(gender) {
     this.setState(prevState=> (
       {
@@ -141,13 +153,31 @@ class Register extends Component {
     ))
   }
 
+  emailChange(email){
+    this.setState(prevState => ({
+      ...prevState,
+      userInformation:{
+        ...prevState.userInformation,
+        email: email
+      }
+    }));
+  }
+
+  passwordChange(password){
+    this.setState(prevState => ({
+      ...prevState,
+      userInformation:{
+        ...prevState.userInformation,
+        password: password
+      }
+    }));
+  }
+
   getStepContent(step) {
     const {classes} = this.props;
     switch (step) {
       case 0:
         // render form for basic information
-        console.log(this.state);
-
         return (
           <div className={classes.container}>
             <Grid container>
@@ -207,7 +237,9 @@ class Register extends Component {
 
                 </FormControl>
                 <FormControl fullWidth >
-                  <FormControlLabel control={ <TextField multiline inputRef={inputRef => Register.descriptionRef = inputRef}
+                  <FormControlLabel control={ <TextField multiline inputRef={inputRef => this.descriptionRef = inputRef}
+                                                         onChange={event => this.descriptionChange()}
+                                                         value={this.state.basicInformation.description}
                                                          label={'توضیحات'} className={classes.input} />}/>
                 </FormControl>
               </Grid>
@@ -226,13 +258,15 @@ class Register extends Component {
                     value={this.state.userInformation.username}/>}/>
                 </FormControl>
                 <FormControl fullWidth >
-                  <FormControlLabel control={ <TextField inputRef={inputRef => this.emailRef = inputRef} type="email"
-
+                  <FormControlLabel control={ <TextField  type="email"
+                                                         onChange={(event) => this.emailChange(event.target.value)}
+                                                         value={this.state.userInformation.email}
                                                          label={'ایمیل'} className={classes.input} />}/>
                 </FormControl>
                 <FormControl fullWidth >
-                  <FormControlLabel control={ <TextField inputRef={inputRef => this.passwordRef = inputRef} type="password"
-
+                  <FormControlLabel control={ <TextField  type="password"
+                                                         onChange={(event) => this.passwordChange(event.target.value)}
+                                                         value={this.state.userInformation.password}
                                                          label={'رمز عبور'} className={classes.input} />}/>
                 </FormControl>
               </Grid>
