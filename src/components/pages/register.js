@@ -5,7 +5,8 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {
   Button, Grid, Paper, TextField, Typography, withStyles, Switch, FormGroup, Divider,
-  FormControl, FormControlLabel} from "material-ui";
+  FormControl, FormControlLabel, InputAdornment, IconButton, Icon
+} from "material-ui";
 import Stepper, {Step, StepLabel, StepButton} from 'material-ui/Stepper';
 import {connect} from "react-redux";
 import {cancelFetching, setFetching} from "../../actions/fetch";
@@ -29,15 +30,24 @@ const style = theme => ({
   },
   datePicker :{
     marginTop : 35,
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    width: 400,
+
+    width: '100%',
 
   },
   fixWidth: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
-    width: 400,
+    width: '100%',
+  },
+  input : {
+    width: '100%',
+    margin: 20
+  },
+  keyboardIcon : {
+    height : 0
+  },
+  button: {
+    margin: 15
   }
 });
 
@@ -63,14 +73,72 @@ class Register extends Component {
     activeStep : 0,
     completed: new Set(),
     skipped: new Set(),
-    selectedDate: new Date()
+    selectedDate: new Date(),
+    basicInformation :{
+      fullName: '',
+      nationalCode: '',
+      gender: 0,
+      birthPlace: '',
+      birthDate: '',
+      description: ''
+    },
+    userInformation:{
+      username: '',
+      email: '',
+      password: ''
+    },
+    addressInformation : {
+      address: '',
+      homeLocation: ''
+    }
   };
 
   handleDateChange(date){
-    console.log(date);
-    this.setState({
-      selectedDate: date
-    });
+    this.setState(prevSate => (
+      {
+        ...prevSate,
+        selectedDate : date,
+        basicInformation : {
+          ...prevSate.basicInformation,
+          birthDate: jMoment(date).format('jYYYYjMMjDD')
+        }
+      }
+    ))
+  }
+  fullNameChange(){
+    this.setState(prevState => (
+      {
+        ...prevState,
+        basicInformation: {
+          ...prevState.basicInformation,
+          fullName: `${this.firstNameRef.value} ${this.lastNameRef.value}`
+        }
+      }
+    ))
+  }
+
+  changeGender(gender) {
+    this.setState(prevState=> (
+      {
+        ...prevState,
+        basicInformation: {
+          ...prevState.basicInformation,
+          gender: gender
+        }
+      }
+    ));
+  }
+
+  birthPlaceChange(){
+    this.setState(prevState => (
+      {
+        ...prevState,
+        basicInformation: {
+          ...prevState.basicInformation,
+          birthPlace: this.birthPlaceRef.value
+        }
+      }
+    ))
   }
 
   getStepContent(step) {
@@ -78,55 +146,87 @@ class Register extends Component {
     switch (step) {
       case 0:
         // render form for basic information
+        console.log(this.state);
+
         return (
           <div className={classes.container}>
             <Grid container>
-              <FormGroup >
-                <FormControl className={classes.fixWidth} >
-                  <FormControlLabel control={<TextField inputRef={inputRef => Register.firstNameRef = inputRef}
-                                                        label={'نام'} style={{width: '100%', margin: 20}}/>}/>
-                </FormControl>
-                <FormControl className={classes.fixWidth}>
-                  <FormControlLabel control={ <TextField inputRef={inputRef => Register.lastNameRef = inputRef}
-                                                         label={'نام خانوادگی'} style={{width: '100%', margin: 20}}/>}/>
-                </FormControl>
-                <FormControl className={classes.fixWidth}>
-                  <FormControlLabel disabled control={ <TextField inputRef={inputRef => Register.lastNameRef = inputRef}
-                                                                  label={'کدملی'} style={{width: '100%', margin: 20}} value="۲۲۸۱۸۳۴۹۹۹"/>}/>
-                </FormControl>
-                <FormControl className={classes.fixWidth}>
-                  <GenderSelector getGenderSelected={(gender) => Register.genderSelected = gender}/>
-                </FormControl>
+              <Grid item
+                    xs={12}>
+                <FormGroup >
+                  <FormControl fullWidth >
+                    <FormControlLabel control={<TextField inputRef={inputRef => this.firstNameRef = inputRef}
+                                                          onChange={(event) => this.fullNameChange()}
+                                                          value={this.state.basicInformation.fullName.split(' ')[0]}
+                                                          label={'نام'} className={classes.input}/>}/>
+                  </FormControl>
+                  <FormControl fullWidth>
+                    <FormControlLabel control={ <TextField inputRef={inputRef => this.lastNameRef = inputRef}
+                                                           onChange={(event) => this.fullNameChange()}
+                                                           value={this.state.basicInformation.fullName.split(' ')[1]}
+                                                           label={'نام خانوادگی'} className={classes.input}/>}/>
+                  </FormControl>
+                  <FormControl fullWidth >
+                    <FormControlLabel disabled control={ <TextField
+                                                                    label={'کدملی'} className={classes.input}
+                                                                    value={this.state.basicInformation.nationalCode}/>}/>
+                  </FormControl>
+                  <FormControl fullWidth required >
+                    <GenderSelector value={this.state.basicInformation.gender} getGenderSelected={(gender) => this.changeGender(gender)}/>
+                  </FormControl>
+                  <FormControl fullWidth >
+                    <FormControlLabel control={ <TextField inputRef={inputRef => this.birthPlaceRef = inputRef}
+                                                           onChange={(event) => this.birthPlaceChange()}
+                                                           value={this.state.basicInformation.birthPlace}
+                                                                    label={'محل تولد'} className={classes.input} />}/>
+                  </FormControl>
+                  <FormControl fullWidth required className={classes.datePicker} >
+                    <FormControlLabel  control={
+                      <DatePicker
+                        okLabel="تأیید"
+                        label="تاریخ تولد"
+                        className={classes.input}
+                        cancelLabel="لغو"
+                        maxDate={Date.now()}
+                        inputRef={inputRef => this.birthDateRef = inputRef}
+                        labelFunc={date => date === null  ? '' : jMoment(date).format('jYYYY/jMM/jDD')}
+                        onChange={this.handleDateChange}
+                        value={this.state.selectedDate}
+                        animateYearScrolling
+                        utils={jalaliUtils}
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="start" >
+                              <IconButton className={classes.keyboardIcon}>
+                                <Icon>date_range</Icon>
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                      }/>
 
-                <FormControl className={classes.datePicker} >
-                  <FormControlLabel  control={<DatePicker
-                    okLabel="تأیید"
-                    cancelLabel="لغو"
-                    maxDate={Date.now()}
-                    labelFunc={date => date === null  ? '' : jMoment(date).format('jYYYY/jMM/jDD')}
-                    onChange={this.handleDateChange}
-                    value={this.state.selectedDate}
-                    animateYearScrolling
-                    utils={jalaliUtils}
-                  />}/>
+                  </FormControl>
+                  <FormControl fullWidth >
+                    <FormControlLabel control={ <TextField multiline inputRef={inputRef => Register.descriptionRef = inputRef}
+                                                           label={'توضیحات'} className={classes.input} />}/>
+                  </FormControl>
+                  {/*<Grid item xs={4}>
+                   <TextField inputRef={inputRef => Register.firstNameRef = inputRef}
+                   label={'نام'} style={{width: '100%', margin: 20}}/>
 
-                </FormControl>
-                {/*<Grid item xs={4}>
-                 <TextField inputRef={inputRef => Register.firstNameRef = inputRef}
-                 label={'نام'} style={{width: '100%', margin: 20}}/>
+                   </Grid>
+                   <Grid item xs={4}>
+                   <TextField inputRef={inputRef => Register.lastNameRef = inputRef}
+                   label={'نام خانوادگی'} style={{width: '100%', margin: 20}}/>
 
-                 </Grid>
-                 <Grid item xs={4}>
-                 <TextField inputRef={inputRef => Register.lastNameRef = inputRef}
-                 label={'نام خانوادگی'} style={{width: '100%', margin: 20}}/>
+                   </Grid>
+                   <Grid item xs={4}>
+                   <Switch inputRef={inputRef => Register.genderRef = inputRef} />
 
-                 </Grid>
-                 <Grid item xs={4}>
-                 <Switch inputRef={inputRef => Register.genderRef = inputRef} />
-
-                 </Grid>*/}
-              </FormGroup>
-
+                   </Grid>*/}
+                </FormGroup>
+              </Grid>
             </Grid>
           </div>
         );
@@ -158,7 +258,18 @@ class Register extends Component {
   }
 
   componentDidMount(){
-    this.props.setSubtitleOfHeader('ثبت نام')
+    this.props.setSubtitleOfHeader('ثبت نام');
+    this.setState(prevState=> ({
+      ...prevState,
+      basicInformation : {
+        ...prevState.basicInformation,
+        nationalCode: this.props.nationalCode
+      },
+      userInformation: {
+        ...prevState.userInformation,
+        username: this.props.nationalCode
+      }
+    }));
   }
 
   totalSteps = () => {
@@ -214,12 +325,31 @@ class Register extends Component {
     });
   };
 
+  isBasicInformationValid(){
+    const {basicInformation} = this.state;
+    return basicInformation.fullName.length > 0 && basicInformation.birthDate.length > 0 && basicInformation.birthPlace.length > 0 &&
+      (basicInformation.gender == 0 || basicInformation.gender == 1) && basicInformation.nationalCode.length > 0
+  }
+
   handleComplete = () => {
+    switch(this.state.activeStep){
+      case 0:
+        if(!this.isBasicInformationValid()){
+          //todo : raise error like toast or snackbar
+          return;
+        }
+        break;
+      case 1:
+        break;
+      case 2:
+        break;
+    }
     const completed = new Set(this.state.completed);
     completed.add(this.state.activeStep);
     this.setState({
       completed,
     });
+
     /**
      * Sigh... it would be much nicer to replace the following if conditional with
      * `if (!this.allStepsComplete())` however state is not set when we do this,
@@ -271,7 +401,7 @@ class Register extends Component {
               alignItems="center"
               justify="center">
           <Grid
-            item xs={9}>
+            item xs={12} md={9} lg={9}>
             <Paper>
               <Grid container
                     direction="column"
@@ -282,7 +412,7 @@ class Register extends Component {
               </Grid>
               <Grid container
                     direction="row"
-                    alignItems="center" spacing={0}
+                    alignItems="center"
                     justify="center">
                 <Grid item xs={10} className={classes.form}>
                   <Grid container
@@ -322,11 +452,28 @@ class Register extends Component {
                           direction="column"
                           alignItems="center"
                           justify="center">
-                      <Grid item xs={6}>
+                      <Grid item xs={12} md={6}>
                         {this.state.activeStep !== steps.length ? (
                           this.getStepContent(this.state.activeStep)
                         ): null}
                       </Grid>
+                      <div>
+                        <Button
+                          disabled={this.state.activeStep === 0}
+                          onClick={this.handleBack}
+                          className={classes.button}
+                        >
+                          قبلی
+                        </Button>
+                        {this.state.activeStep !== steps.length &&
+                        (this.state.completed.has(this.state.activeStep) ? (
+                          null
+                        ) : (
+                          <Button className={classes.button} raised variant="raised" color="primary" onClick={this.handleComplete}>
+                            {this.completedSteps() === this.totalSteps() - 1 ? 'ارسال' : 'قدم بعدی'}
+                          </Button>
+                        ))}
+                      </div>
                     </Grid>
                   </Grid>
 
@@ -340,6 +487,8 @@ class Register extends Component {
       </div>
     );
   }
+
+
 }
 
 Register.propTypes = {
