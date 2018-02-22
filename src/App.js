@@ -16,6 +16,23 @@ const style = {
 };
 
 class App extends Component {
+
+  constructor(props){
+    super(props);
+    this.setNationalCode = this.setNationalCode.bind(this);
+  }
+
+  state = {
+    nationalCode: ''
+  };
+
+  setNationalCode(nationalCode){
+    this.setState({
+      nationalCode: nationalCode
+    });
+  }
+
+
   render() {
     const { classes } = this.props;
     return (
@@ -24,8 +41,10 @@ class App extends Component {
         <Grid container  direction="column" spacing={24}  justify="space-between">
           <Grid item xs={12}>
             <Switch>
-              <Route exact path='/' component={StartPage} />
-              <Route path='/register' component={RegisterPage}/>
+              <Route exact path='/' render={(props) => (<StartPage {...props} setNationalCodeFun={this.setNationalCode}/>)} />
+              <Route path='/register' render={(props) => (
+                <RegisterPage {...props} nationalCode={this.state.nationalCode} />
+              )}/>
             </Switch>
           </Grid>
         </Grid>
