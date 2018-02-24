@@ -5,7 +5,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {
   Button, Grid, Paper, TextField, Typography, withStyles, Switch, FormGroup, Divider,
-  FormControl, FormControlLabel, InputAdornment, IconButton, Icon
+  FormControl, FormControlLabel, InputAdornment, IconButton, Icon, Snackbar
 } from "material-ui";
 import Stepper, {Step, StepLabel, StepButton} from 'material-ui/Stepper';
 import {connect} from "react-redux";
@@ -66,32 +66,38 @@ class Register extends Component {
   constructor(props){
     super(props);
     this.handleDateChange = this.handleDateChange.bind(this);
+    !localStorage.nationalCode ? props.history.push('/') : null;
+    this.state = {
+      activeStep : 0,
+      completed: new Set(),
+      skipped: new Set(),
+      selectedDate: new Date(),
+      snackbar: {
+        isOpen: false,
+        message: ''
+      },
+      basicInformation :{
+        fullName: '',
+        nationalCode: localStorage.nationalCode,
+        gender: 0,
+        birthPlace: '',
+        birthDate: '',
+        description: '',
+        mobileNumber: ''
+      },
+      userInformation:{
+        username: localStorage.nationalCode,
+        email: '',
+        password: ''
+      },
+      addressInformation : {
+        address: '',
+        homeLocation: ''
+      }
+    }
 
   }
 
-  state = {
-    activeStep : 0,
-    completed: new Set(),
-    skipped: new Set(),
-    selectedDate: new Date(),
-    basicInformation :{
-      fullName: '',
-      nationalCode: '',
-      gender: 0,
-      birthPlace: '',
-      birthDate: '',
-      description: ''
-    },
-    userInformation:{
-      username: '',
-      email: '',
-      password: ''
-    },
-    addressInformation : {
-      address: '',
-      homeLocation: ''
-    }
-  };
 
   handleDateChange(date){
     this.setState(prevSate => (
@@ -173,6 +179,16 @@ class Register extends Component {
     }));
   }
 
+  mobileNumberChange(){
+    this.setState(prevState => ({
+      ...prevState,
+      basicInformation:{
+        ...prevState.basicInformation,
+        mobileNumber: this.mobileNumberRef.value
+      }
+    }));
+  }
+
   getStepContent(step) {
     const {classes} = this.props;
     switch (step) {
@@ -183,38 +199,47 @@ class Register extends Component {
             <Grid container>
               <Grid item
                     xs={12}>
-                <FormControl fullWidth >
-                  <FormControlLabel control={<TextField inputRef={inputRef => this.firstNameRef = inputRef}
+                <FormControl margin={'root'} fullWidth >
+                  <FormControlLabel control={<TextField id={'firstName'} inputRef={inputRef => this.firstNameRef = inputRef}
                                                         onChange={(event) => this.fullNameChange()}
                                                         value={this.state.basicInformation.fullName.split(' ')[0]}
                                                         label={'نام'} className={classes.input}/>}/>
                 </FormControl>
-                <FormControl fullWidth>
-                  <FormControlLabel control={ <TextField inputRef={inputRef => this.lastNameRef = inputRef}
+                <FormControl margin={'root'} fullWidth>
+                  <FormControlLabel control={ <TextField id={'lastName'} inputRef={inputRef => this.lastNameRef = inputRef}
                                                          onChange={(event) => this.fullNameChange()}
                                                          value={this.state.basicInformation.fullName.split(' ')[1]}
                                                          label={'نام خانوادگی'} className={classes.input}/>}/>
                 </FormControl>
-                <FormControl fullWidth >
+                <FormControl margin={'root'} fullWidth >
                   <FormControlLabel disabled control={ <TextField
+                    id={'nationalCode'}
                     label={'کدملی'} className={classes.input}
                     value={this.state.basicInformation.nationalCode}/>}/>
                 </FormControl>
-                <FormControl fullWidth required >
+                <FormControl margin={'root'} fullWidth required >
                   <GenderSelector value={this.state.basicInformation.gender} getGenderSelected={(gender) => this.changeGender(gender)}/>
                 </FormControl>
-                <FormControl fullWidth >
-                  <FormControlLabel control={ <TextField inputRef={inputRef => this.birthPlaceRef = inputRef}
+                <FormControl margin={'root'} fullWidth >
+                  <FormControlLabel control={ <TextField id={'birthPlace'} inputRef={inputRef => this.birthPlaceRef = inputRef}
                                                          onChange={(event) => this.birthPlaceChange()}
                                                          value={this.state.basicInformation.birthPlace}
                                                          label={'محل تولد'} className={classes.input} />}/>
                 </FormControl>
-                <FormControl fullWidth required className={classes.datePicker} >
+                <FormControl margin={'root'} fullWidth >
+                  <FormControlLabel control={ <TextField id={'mobileNumber'} inputRef={inputRef => this.mobileNumberRef = inputRef}
+                                                         onChange={(event) => this.mobileNumberChange()}
+                                                         value={this.state.basicInformation.mobileNumber}
+                                                         type={'number'}
+                                                         label={'شماره موبایل'} className={classes.input} />}/>
+                </FormControl>
+                <FormControl margin={'root'} fullWidth required className={classes.datePicker} >
                   <FormControlLabel  control={
                     <DatePicker
                       okLabel="تأیید"
                       label="تاریخ تولد"
                       className={classes.input}
+                      id={'birthDate'}
                       cancelLabel="لغو"
                       maxDate={Date.now()}
                       inputRef={inputRef => this.birthDateRef = inputRef}
@@ -236,8 +261,8 @@ class Register extends Component {
                   }/>
 
                 </FormControl>
-                <FormControl fullWidth >
-                  <FormControlLabel control={ <TextField multiline inputRef={inputRef => this.descriptionRef = inputRef}
+                <FormControl margin={'root'} fullWidth >
+                  <FormControlLabel control={ <TextField multiline id={'description'} inputRef={inputRef => this.descriptionRef = inputRef}
                                                          onChange={event => this.descriptionChange()}
                                                          value={this.state.basicInformation.description}
                                                          label={'توضیحات'} className={classes.input} />}/>
@@ -252,20 +277,23 @@ class Register extends Component {
           <div>
             <Grid container>
               <Grid item xs={12}>
-                <FormControl fullWidth >
+                <FormControl margin={'root'} fullWidth >
                   <FormControlLabel disabled control={ <TextField
+                    id={'userName'}
                     label={'نام کاربری'} className={classes.input}
                     value={this.state.userInformation.username}/>}/>
                 </FormControl>
-                <FormControl fullWidth >
+                <FormControl margin={'root'} fullWidth >
                   <FormControlLabel control={ <TextField  type="email"
+                                                          id={'email'}
                                                          onChange={(event) => this.emailChange(event.target.value)}
                                                          value={this.state.userInformation.email}
                                                           defaultValue={''}
                                                          label={'ایمیل'} className={classes.input} />}/>
                 </FormControl>
-                <FormControl fullWidth >
+                <FormControl margin={'root'} fullWidth >
                   <FormControlLabel control={ <TextField  type="password"
+                                                          id={'password'}
                                                          onChange={(event) => this.passwordChange(event.target.value)}
                                                          value={this.state.userInformation.password}
                                                           defaultValue={''}
@@ -293,7 +321,13 @@ class Register extends Component {
 
   componentDidMount(){
     this.props.setSubtitleOfHeader('ثبت نام');
-    this.setState(prevState=> ({
+    this.setState({
+      snackbar:{
+        isOpen: true,
+        message: 'کد ملی شما در سیستم یافت نشد. لطفا در سیستم ثبت نام کنید.'
+      }
+    })
+   /* this.setState(prevState=> ({
       ...prevState,
       basicInformation : {
         ...prevState.basicInformation,
@@ -303,7 +337,7 @@ class Register extends Component {
         ...prevState.userInformation,
         username: this.props.nationalCode
       }
-    }));
+    }));*/
   }
 
   totalSteps = () => {
@@ -517,6 +551,11 @@ class Register extends Component {
 
             </Paper>
           </Grid>
+
+          <Snackbar open={this.state.snackbar.isOpen} autoHideDuration={6000} anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center'
+          }} message={this.state.snackbar.message}  onClose={() => this.setState({snackbar: {isOpen : false, message : ''}})}/>
 
         </Grid>
       </div>
