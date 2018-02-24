@@ -2,7 +2,6 @@
  * Created by milad on 1/28/18.
  */
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import {
   Avatar,
   Grid,
@@ -121,7 +120,7 @@ class StartPage extends Component {
               }
             })
           } else if (res.error) {
-            this.props.setNationalCodeFun(this.nationalCodeInput.value);
+            localStorage.nationalCode = this.nationalCodeInput.value;
             this.props.history.push('/register');
           }
         }).catch(err => {
@@ -188,7 +187,6 @@ class StartPage extends Component {
 }
 
 StartPage.propTypes = {
-  setNationalCodeFun : PropTypes.func
 };
 StartPage.defaultProps = {};
 
