@@ -17,7 +17,7 @@ import GenderSelector from "../items/GenderSelector";
 import { DatePicker } from 'material-ui-pickers';
 import jalaliUtils from 'material-ui-pickers-jalali-utils';
 import jMoment from 'jalali-moment';
-import Marker from "../items/Marker/Marker";
+import Marker from "../items/Marker";
 
 
 
