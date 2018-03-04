@@ -4,6 +4,7 @@ import { Grid } from 'material-ui';
 import NavBar from './components/items/navbar';
 import StartPage from './components/pages/start';
 import RegisterPage from './components/pages/register';
+import Panel from './components/pages/panelSwitcher';
 import {withStyles } from 'material-ui/styles'
 
 import {Route, Switch} from "react-router-dom";
@@ -29,6 +30,7 @@ class App extends Component {
             <Switch>
               <Route exact path='/' component={StartPage} />
               <Route path='/register' component={RegisterPage}/>
+              <Route path='/panel' component={Panel}/>
             </Switch>
           </Grid>
         </Grid>
