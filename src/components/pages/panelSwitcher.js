@@ -4,6 +4,7 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import {Switch, Route} from 'react-router-dom';
+import MainPanel from './Panel/main';
 
 class Panel extends Component {
   constructor(props){
@@ -17,13 +18,13 @@ class Panel extends Component {
   }
 
   generatePanelRoute(endPoint){
-    return `${this.props.location.pathname}/${endPoint}`;
+    return `/panel/${endPoint}`;
   }
   render() {
     return (
       <div>
         <Switch>
-          <Route path={this.generatePanelRoute('main')}/>
+          <Route path={this.generatePanelRoute('main')} component={MainPanel}/>
         </Switch>
       </div>
     );
