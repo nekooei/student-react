@@ -92,6 +92,7 @@ class Register extends Component {
       },
       addressInformation : {
         address: '',
+        phoneNumber: '',
         homeLocation: ''
       }
     }
@@ -189,6 +190,26 @@ class Register extends Component {
     }));
   }
 
+  addressChange(address){
+    this.setState( prevState => ({
+      ...prevState,
+      addressInformation: {
+        ...prevState.addressInformation,
+        address: address
+      }
+    }));
+  }
+  phoneNumberChange(phoneNumber){
+    this.setState( prevState => ({
+      ...prevState,
+      addressInformation: {
+        ...prevState.addressInformation,
+        phoneNumber: phoneNumber
+      }
+    }));
+  }
+
+
   getStepContent(step) {
     const {classes} = this.props;
     switch (step) {
@@ -200,20 +221,20 @@ class Register extends Component {
               <Grid item
                     xs={12}>
                 <FormControl margin={'root'} fullWidth >
-                  <FormControlLabel control={<TextField id={'firstName'} inputRef={inputRef => this.firstNameRef = inputRef}
+                  <FormControlLabel control={<TextField id={'firstName'} name={'firstName'} inputRef={inputRef => this.firstNameRef = inputRef}
                                                         onChange={(event) => this.fullNameChange()}
                                                         value={this.state.basicInformation.fullName.split(' ')[0]}
                                                         label={'نام'} className={classes.input}/>}/>
                 </FormControl>
                 <FormControl margin={'root'} fullWidth>
-                  <FormControlLabel control={ <TextField id={'lastName'} inputRef={inputRef => this.lastNameRef = inputRef}
+                  <FormControlLabel control={ <TextField id={'lastName'} name={'lastName'} inputRef={inputRef => this.lastNameRef = inputRef}
                                                          onChange={(event) => this.fullNameChange()}
                                                          value={this.state.basicInformation.fullName.split(' ')[1]}
                                                          label={'نام خانوادگی'} className={classes.input}/>}/>
                 </FormControl>
                 <FormControl margin={'root'} fullWidth >
                   <FormControlLabel disabled control={ <TextField
-                    id={'nationalCode'}
+                    id={'nationalCode'} name={'nationalCode'}
                     label={'کدملی'} className={classes.input}
                     value={this.state.basicInformation.nationalCode}/>}/>
                 </FormControl>
@@ -221,13 +242,13 @@ class Register extends Component {
                   <GenderSelector value={this.state.basicInformation.gender} getGenderSelected={(gender) => this.changeGender(gender)}/>
                 </FormControl>
                 <FormControl margin={'root'} fullWidth >
-                  <FormControlLabel control={ <TextField id={'birthPlace'} inputRef={inputRef => this.birthPlaceRef = inputRef}
+                  <FormControlLabel control={ <TextField id={'birthPlace'} name={'birthPlace'} inputRef={inputRef => this.birthPlaceRef = inputRef}
                                                          onChange={(event) => this.birthPlaceChange()}
                                                          value={this.state.basicInformation.birthPlace}
                                                          label={'محل تولد'} className={classes.input} />}/>
                 </FormControl>
                 <FormControl margin={'root'} fullWidth >
-                  <FormControlLabel control={ <TextField id={'mobileNumber'} inputRef={inputRef => this.mobileNumberRef = inputRef}
+                  <FormControlLabel control={ <TextField id={'mobileNumber'} name={'mobileNumber'} inputRef={inputRef => this.mobileNumberRef = inputRef}
                                                          onChange={(event) => this.mobileNumberChange()}
                                                          value={this.state.basicInformation.mobileNumber}
                                                          type={'number'}
@@ -262,7 +283,7 @@ class Register extends Component {
 
                 </FormControl>
                 <FormControl margin={'root'} fullWidth >
-                  <FormControlLabel control={ <TextField multiline id={'description'} inputRef={inputRef => this.descriptionRef = inputRef}
+                  <FormControlLabel control={ <TextField multiline id={'description'} name={'description'} inputRef={inputRef => this.descriptionRef = inputRef}
                                                          onChange={event => this.descriptionChange()}
                                                          value={this.state.basicInformation.description}
                                                          label={'توضیحات'} className={classes.input} />}/>
@@ -279,7 +300,7 @@ class Register extends Component {
               <Grid item xs={12}>
                 <FormControl margin={'root'} fullWidth >
                   <FormControlLabel disabled control={ <TextField
-                    id={'userName'}
+                    id={'userName'} name={'userName'}
                     label={'نام کاربری'} className={classes.input}
                     value={this.state.userInformation.username}/>}/>
                 </FormControl>
@@ -294,6 +315,7 @@ class Register extends Component {
                 <FormControl margin={'root'} fullWidth >
                   <FormControlLabel control={ <TextField  type="password"
                                                           id={'password'}
+                                                          name={'password'}
                                                          onChange={(event) => this.passwordChange(event.target.value)}
                                                          value={this.state.userInformation.password}
                                                           defaultValue={''}
@@ -309,7 +331,20 @@ class Register extends Component {
           <div>
             <Grid container>
               <Grid item xs={12}>
-                <h1>Hello dicklover bitch</h1>
+                <FormControl margin={'root'} fullWidth >
+                  <FormControlLabel control={ <TextField
+                    id={'address'} name={'address'} multiline
+                    label={'آدرس'} className={classes.input}
+                    onChange={(event) => this.addressChange(event.target.value)}
+                    value={this.state.addressInformation.address}/>}/>
+                </FormControl>
+                <FormControl margin={'root'} fullWidth >
+                  <FormControlLabel control={ <TextField  name={'phoneNumber'}
+                                                          id={'phoneNumber'}
+                                                          onChange={(event) => this.phoneNumberChange(event.target.value)}
+                                                          value={this.state.addressInformation.phoneNumber}
+                                                          label={'شماره تلفن ثابت'} className={classes.input} />}/>
+                </FormControl>
               </Grid>
             </Grid>
           </div>
@@ -396,7 +431,7 @@ class Register extends Component {
   isBasicInformationValid(){
     const {basicInformation} = this.state;
     return basicInformation.fullName.length > 0 && basicInformation.birthDate.length > 0 && basicInformation.birthPlace.length > 0 &&
-      (basicInformation.gender == 0 || basicInformation.gender == 1) && basicInformation.nationalCode.length > 0
+      (basicInformation.gender === '0' || basicInformation.gender === '1') && basicInformation.nationalCode.length > 0
   }
   isUserInformationValid(){
     const {userInformation} = this.state;
@@ -407,14 +442,24 @@ class Register extends Component {
     switch(this.state.activeStep){
       case 0:
         if(!this.isBasicInformationValid()){
-          //todo : raise error like toast or snackbar
+          this.setState({
+            snackbar: {
+              isOpen : true,
+              message: 'لطفا اطلاعات را کامل وارد کنید'
+            }
+          });
           return;
         }
         break;
 
       case 1:
         if(!this.isUserInformationValid()){
-          //todo : raise error like toast or snackbar
+          this.setState({
+            snackbar: {
+              isOpen : true,
+              message: 'لطفا اطلاعات را کامل وارد کنید'
+            }
+          });
           return;
         }
         break;
