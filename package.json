@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "google-map-react": "^0.32.0",
     "jalali-moment": "^3.0.10",
     "jss": "^9.5.1",
     "jss-rtl": "^0.2.1",
