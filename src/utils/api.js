@@ -46,3 +46,16 @@ export const getStudentInfo = () => (
     }
   ).then(data => data.json())
 );
+
+export const login = (username, password) =>
+  fetch(
+    getUrl('student/login'),
+    {
+      method: 'POST',
+      header: getHeaders(false),
+      body: JSON.stringify({
+        nationalCode: username,
+        password: password
+      })
+    }
+  ).then(data => data.json());
