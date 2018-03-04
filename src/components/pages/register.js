@@ -4,17 +4,20 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {
-  Button, Grid, Paper, TextField, Typography, withStyles, Switch, FormGroup, Divider,
+  Button, Grid, Paper, TextField, Typography, withStyles, Divider,
   FormControl, FormControlLabel, InputAdornment, IconButton, Icon, Snackbar
 } from "material-ui";
+import GoogleMap from 'google-map-react';
 import Stepper, {Step, StepLabel, StepButton} from 'material-ui/Stepper';
+import {GOOGLE_MAP_KEY} from '../../utils/staticData';
 import {connect} from "react-redux";
 import {cancelFetching, setFetching} from "../../actions/fetch";
 import {setHeaderSubTitle} from "../../actions/header";
 import GenderSelector from "../items/GenderSelector";
-import { TimePicker, DateTimePicker, DatePicker } from 'material-ui-pickers';
+import { DatePicker } from 'material-ui-pickers';
 import jalaliUtils from 'material-ui-pickers-jalali-utils';
 import jMoment from 'jalali-moment';
+import Marker from "../items/Marker/Marker";
 
 
 
@@ -47,7 +50,10 @@ const style = theme => ({
     height : 0
   },
   button: {
-    margin: 15
+    margin: 40
+  },
+  mapContainer: {
+    height: 400
   }
 });
 
@@ -93,7 +99,11 @@ class Register extends Component {
       addressInformation : {
         address: '',
         phoneNumber: '',
-        homeLocation: ''
+        homeLocation: '',
+        homeGeometric: {
+          lat: '',
+          lng: ''
+        }
       }
     }
 
@@ -207,6 +217,20 @@ class Register extends Component {
         phoneNumber: phoneNumber
       }
     }));
+  }
+
+  locationChange(lat, lng){
+    console.log(lat, lng);
+    this.setState({
+      addressInformation: {
+        ...this.state.addressInformation,
+        homeLocation: `(${lat},${lng})`,
+        homeGeometric: {
+          lat,
+          lng
+        }
+      }
+    })
   }
 
 
@@ -345,6 +369,25 @@ class Register extends Component {
                                                           value={this.state.addressInformation.phoneNumber}
                                                           label={'شماره تلفن ثابت'} className={classes.input} />}/>
                 </FormControl>
+
+              </Grid>
+            </Grid>
+            <Grid container
+                  direction="row"
+                  alignItems="center"
+                  justify="center">
+              <Grid item xs={12} className={classes.mapContainer}>
+                <p>محل منزل خود را روی نقشه انتخاب کنید</p>
+                <GoogleMap
+                  bootstrapURLKeys={{ key: [GOOGLE_MAP_KEY] }}
+                  defaultCenter= {{lat: 29.610734, lng:  52.492431}}
+                  defaultZoom={12}
+                  onClick={({x, y, lat, lng, event}) => this.locationChange(lat, lng)}
+                >
+                  {[this.state.addressInformation.homeLocation].map(homeLocation => (
+                    <Marker lat={this.state.addressInformation.homeGeometric.lat} lng={this.state.addressInformation.homeGeometric.lng}/>
+                  ))}
+                </GoogleMap>
               </Grid>
             </Grid>
           </div>
@@ -573,21 +616,24 @@ class Register extends Component {
                           direction="column"
                           alignItems="center"
                           justify="center">
-                      <Grid item xs={12} md={6}>
+                      <Grid item xs={12} md={6} lg={8}>
                         {this.state.activeStep !== steps.length ? (
                           this.getStepContent(this.state.activeStep)
                         ): null}
                       </Grid>
-                      <div>
-                        {this.state.activeStep !== steps.length &&
-                        (this.state.completed.has(this.state.activeStep) ? (
-                          null
-                        ) : (
-                          <Button className={classes.button} raised variant="raised" color="primary" onClick={this.handleComplete}>
-                            {this.completedSteps() === this.totalSteps() - 1 ? 'ارسال' : 'قدم بعدی'}
-                          </Button>
-                        ))}
-                      </div>
+                      <Grid item xs={12} >
+                        <div>
+                          {this.state.activeStep !== steps.length &&
+                          (this.state.completed.has(this.state.activeStep) ? (
+                            null
+                          ) : (
+                            <Button className={classes.button} raised variant="raised" color="primary" onClick={this.handleComplete}>
+                              {this.completedSteps() === this.totalSteps() - 1 ? 'ارسال' : 'قدم بعدی'}
+                            </Button>
+                          ))}
+                        </div>
+                      </Grid>
+
                     </Grid>
                   </Grid>
 
