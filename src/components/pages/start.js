@@ -7,7 +7,7 @@ import {
   Grid,
   Paper,
   TextField,
-  Button
+  Button, Snackbar
 } from 'material-ui';
 import {
   withStyles
@@ -21,7 +21,7 @@ import {
 import  {
   setHeaderSubTitle
 } from '../../actions/header';
-import {checkRegistration} from '../../utils/api';
+import {checkRegistration, login} from '../../utils/api';
 
 import {
   fillRequired,
@@ -57,8 +57,17 @@ class StartPage extends Component {
         emailError: {
           hasError: false,
           errorMsg: ''
+        },
+        passwordError: {
+          hasError: false,
+          errorMsg: ''
         }
-      }
+      },
+      snackbar: {
+        isOpen: false,
+        message: ''
+      },
+      buttonText : 'بعدی'
     }
   }
 
@@ -66,10 +75,6 @@ class StartPage extends Component {
     this.props.setSubtitleOfHeader('ورود');
   }
 
-
-  handleChangeInput = inputRef => {
-
-  };
 
   nextStep() {
     if (!this.state.step.registerChecked) {
@@ -116,7 +121,8 @@ class StartPage extends Component {
                   ...[prevState.step],
                   registerChecked : true,
                   registration: false
-                }
+                },
+                buttonText: 'ورود'
               }
             })
           } else if (res.error) {
@@ -127,7 +133,42 @@ class StartPage extends Component {
         console.log(err);
       });
     }else if(this.state.step.registerChecked && this.state.isRegistered){
-      //todo : do login here
+      if(!this.passwordInput.value){
+        this.setState(prevState => {
+          return {
+            ...prevState,
+            errors: {
+              ...prevState.errors,
+              passwordError: {
+                hasError: true,
+                errorMsg: 'این فیلد نمی‌تواند خالی باشد.'
+              }
+            }
+          }
+        });
+        return;
+      }
+      this.props.setFetching();
+      login(this.nationalCodeInput.value, this.passwordInput.value)
+        .then(response => {
+          this.props.cancelFetching();
+          if(response.success){
+            localStorage.clear();
+            localStorage.nationalCode = response.payload.nationalCode;
+            localStorage.id = response.payload.id;
+            localStorage.token = response.payload.token;
+            this.props.history.push('/panel');
+          }else {
+            this.passwordInput.value = '';
+            this.passwordInput.focus();
+            this.setState({
+              snackbar: {
+                isOpen: true,
+                message: 'نام کاربری یا کلمه عبور اشتباه است.'
+              }
+            })
+          }
+        })
     }
 
 
@@ -169,9 +210,11 @@ class StartPage extends Component {
                                style={{width: '100%', margin: 20}}/>
                     {this.state.isRegistered ? (
                       <TextField type='password' inputRef={input => this.passwordInput = input} label='رمز عبور'
+                                 error={this.state.errors.passwordError.hasError}
+                                 helperText={this.state.errors.passwordError.hasError ? this.state.errors.passwordError.errorMsg : ''}
                                  style={{width: '100%', margin: 20}}/>
                     ) : null}
-                    <Button raised color='primary' onClick={this.nextStep}>بعدی</Button>
+                    <Button raised color='primary' onClick={this.nextStep}>{this.state.buttonText}</Button>
                   </Grid>
 
                 </Grid>
@@ -179,6 +222,11 @@ class StartPage extends Component {
 
             </Paper>
           </Grid>
+
+          <Snackbar open={this.state.snackbar.isOpen} autoHideDuration={6000} anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center'
+          }} message={this.state.snackbar.message}  onClose={() => this.setState({snackbar: {isOpen : false, message : ''}})}/>
 
         </Grid>
       </div>
