@@ -385,7 +385,7 @@ class Register extends Component {
                   onClick={({x, y, lat, lng, event}) => this.locationChange(lat, lng)}
                 >
                   {[this.state.addressInformation.homeLocation].map(homeLocation => (
-                    <Marker lat={this.state.addressInformation.homeGeometric.lat} lng={this.state.addressInformation.homeGeometric.lng}/>
+                    <Marker markerName={'embassy'} lat={this.state.addressInformation.homeGeometric.lat} lng={this.state.addressInformation.homeGeometric.lng}/>
                   ))}
                 </GoogleMap>
               </Grid>
