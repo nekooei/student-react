@@ -13,7 +13,7 @@ export default (state = initState , action) => {
   switch (action.type){
     case UPDATE_LOGIN_TOKEN:
       return {
-        ...initState,
+        token : localStorage.token,
         lastCheck : Date.now()
       };
     case DELETE_LOGIN_TOKEN:
