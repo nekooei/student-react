@@ -29,3 +29,9 @@ export const checkToken = () => dispatch => (
       }
     })
 );
+
+export const deleteToken = ()  => (
+  {
+    type: DELETE_LOGIN_TOKEN
+  }
+);
