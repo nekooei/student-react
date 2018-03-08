@@ -31,6 +31,9 @@ class App extends Component {
               <Route exact path='/' component={StartPage} />
               <Route path='/register' component={RegisterPage}/>
               <Route path='/panel' component={Panel}/>
+              //todo:create_not_found_page
+              <Route render={() => (<div><p>Not found</p></div>)}/>
+
             </Switch>
           </Grid>
         </Grid>
