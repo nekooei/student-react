@@ -6,9 +6,13 @@ import {connect} from 'react-redux';
 import {
   AppBar,
   Toolbar, Typography,
-  LinearProgress
+  LinearProgress, Menu, MenuItem, IconButton
 } from 'material-ui';
 import {withStyles} from 'material-ui/styles';
+import {AccountCircle} from "material-ui-icons";
+import {DELETE_LOGIN_TOKEN} from "../../actions/constants";
+import {removeUserInfo} from "../../actions/student";
+import {deleteToken} from "../../actions/login";
 
 const styles = {
   root: {
@@ -20,12 +24,34 @@ const styles = {
 };
 
 class NavBar extends Component {
+  state = {
+    anchorEl: null,
+  };
+
+  handleMenu = event => {
+    this.setState({ anchorEl: event.currentTarget });
+  };
+
+  handleClose = () => {
+    this.setState({ anchorEl: null });
+  };
+
+  logout = () => {
+    this.handleClose();
+    localStorage.clear();
+    this.props.logout();
+  };
+
 
   render() {
     const {classes} = this.props;
+    const { anchorEl } = this.state;
+    const open = Boolean(anchorEl);
+    const auth = !!this.props.loginInfo.token;
     return (
       <div className={classes.root}>
         <AppBar>
+
           <Toolbar>
             <Typography type="title" color="inherit"  className={classes.flex}>
               دانش آموز
@@ -33,6 +59,36 @@ class NavBar extends Component {
             <Typography type="subheading" color="inherit" className={classes.flex}>
               {this.props.header.subtitle}
             </Typography>
+            {auth ? (
+              <div>
+                <IconButton
+                  aria-owns={open ? 'menu-appbar' : null}
+                  aria-haspopup="true"
+                  onClick={this.handleMenu}
+                  color="inherit"
+                >
+                  <AccountCircle />
+                </IconButton>
+                <Menu
+                  id="menu-appbar"
+                  anchorEl={anchorEl}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'left',
+                  }}
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'left',
+                  }}
+                  open={open}
+                  onClose={this.handleClose}
+                >
+                  <MenuItem onClick={this.handleClose}>پروفایل</MenuItem>
+                  <MenuItem onClick={this.logout}>خروج</MenuItem>
+                </Menu>
+              </div>
+            ): null}
+
           </Toolbar>
           {this.props.fetching ? (
             <LinearProgress mode='query' color='secondary'/>
@@ -46,10 +102,22 @@ class NavBar extends Component {
 
 function mapStateToProps(state) {
   return {
+    loginInfo : state.loginInfo,
     fetching : state.fetching,
     header : state.header
   };
 }
 
+const logout = dispatch =>{
+  dispatch(deleteToken());
+  dispatch(removeUserInfo())
+};
 
-export default connect(mapStateToProps)(withStyles(styles)(NavBar));
+function mapDispatchToProps(dispatch) {
+  return{
+    logout : () => logout(dispatch)
+  }
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(NavBar));
