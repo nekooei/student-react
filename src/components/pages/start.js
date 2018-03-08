@@ -29,6 +29,8 @@ import {
   isNumber,
   passwordStrong
 }from '../../utils/validators';
+import {checkToken} from "../../actions/login";
+import {setUserInfo} from "../../actions/student";
 
 
 const style = {
@@ -157,6 +159,8 @@ class StartPage extends Component {
             localStorage.nationalCode = response.payload.nationalCode;
             localStorage.id = response.payload.id;
             localStorage.token = response.payload.token;
+            this.props.checkToken();
+            this.props.setStudent();
             this.props.history.push('/panel');
           }else {
             this.passwordInput.value = '';
@@ -248,7 +252,9 @@ function mapDispatchToProps(dispatch) {
   return {
     setFetching: () => dispatch(setFetching()),
     cancelFetching: () => dispatch(cancelFetching()),
-    setSubtitleOfHeader: subtitle => dispatch(setHeaderSubTitle(subtitle))
+    setSubtitleOfHeader: subtitle => dispatch(setHeaderSubTitle(subtitle)),
+    checkToken : () => dispatch(checkToken()),
+    setStudent : () => dispatch(setUserInfo())
   }
 }
 
