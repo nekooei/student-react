@@ -5,15 +5,27 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import {Switch, Route} from 'react-router-dom';
 import MainPanel from './Panel/main';
+import NewService from './Panel/newService';
+import {cancelFetching, setFetching} from "../../actions/fetch";
+import {setHeaderSubTitle} from "../../actions/header";
+import {checkToken} from "../../actions/login";
+import {setUserInfo} from "../../actions/student";
 
 class Panel extends Component {
   constructor(props){
     super(props);
-    if(!localStorage.token || localStorage.token.length === 0){
-      localStorage.clear();
-      this.props.history.push('/');
-    }else {
+
+  }
+
+  componentDidMount(){
+
+
+    if(this.props.history.location.pathname === '/panel'){
       this.props.history.push(this.generatePanelRoute('main'));
+    }
+    if(!this.props.student.id){
+      this.props.checkToken();
+      this.props.setStudent();
     }
   }
 
@@ -21,10 +33,15 @@ class Panel extends Component {
     return `/panel/${endPoint}`;
   }
   render() {
+    if(!localStorage.token || localStorage.token.length === 0){
+      localStorage.clear();
+      this.props.history.push('/');
+    }
     return (
       <div>
         <Switch>
-          <Route path={this.generatePanelRoute('main')} component={MainPanel}/>
+          <Route exact path={this.generatePanelRoute('main')} component={MainPanel}/>
+          <Route exact path={this.generatePanelRoute('newService')} component={NewService}/>
         </Switch>
       </div>
     );
@@ -37,5 +54,15 @@ function mapStateToProps(state) {
   }
 }
 
+function mapDispatchToProps(dispatch) {
+  return {
+    setFetching: () => dispatch(setFetching()),
+    cancelFetching: () => dispatch(cancelFetching()),
+    setSubtitleOfHeader: subtitle => dispatch(setHeaderSubTitle(subtitle)),
+    checkToken : () => dispatch(checkToken()),
+    setStudent : () => dispatch(setUserInfo())
+  }
+}
 
-export default connect(mapStateToProps)(Panel);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Panel);
