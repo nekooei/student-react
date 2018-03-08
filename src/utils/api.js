@@ -52,10 +52,20 @@ export const login = (username, password) =>
     getUrl('student/login'),
     {
       method: 'POST',
-      header: getHeaders(false),
+      headers: getHeaders(false),
       body: JSON.stringify({
         nationalCode: username,
         password: password
       })
     }
   ).then(data => data.json());
+
+export const getSchools = () =>{
+  console.log(getHeaders(true));
+  return fetch(
+    getUrl('student/school'),{
+      headers : getHeaders(true),
+      method: 'GET'
+    }
+  ).then(data => data.json());
+}
