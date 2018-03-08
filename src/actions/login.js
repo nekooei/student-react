@@ -3,7 +3,8 @@
  */
 import {
   UPDATE_LOGIN_TOKEN,
-  DELETE_LOGIN_TOKEN
+  DELETE_LOGIN_TOKEN,
+  REMOVE_STUDENT_INFO
 } from './constants';
 
 import {
@@ -13,7 +14,7 @@ import {
 export const checkToken = () => dispatch => (
   checkTokenAPI()
     .then(response => {
-      if(response.data.valid){
+      if(response.success){
         dispatch({
           type: UPDATE_LOGIN_TOKEN,
           payload: Date.now()
@@ -21,6 +22,9 @@ export const checkToken = () => dispatch => (
       }else {
         dispatch({
           type: DELETE_LOGIN_TOKEN
+        });
+        dispatch({
+          type: REMOVE_STUDENT_INFO
         })
       }
     })

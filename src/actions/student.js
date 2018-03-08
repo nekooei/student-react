@@ -14,7 +14,7 @@ export const setUserInfo = () => dispatch => (
     .then(response => (
       dispatch({
         type: SET_STUDENT_INFO,
-        payload: response.data
+        payload: response.payload
       })
     ))
 );
