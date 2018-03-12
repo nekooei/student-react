@@ -10,7 +10,6 @@ import {
 } from 'material-ui';
 import {withStyles} from 'material-ui/styles';
 import {AccountCircle} from "material-ui-icons";
-import {DELETE_LOGIN_TOKEN} from "../../actions/constants";
 import {removeUserInfo} from "../../actions/student";
 import {deleteToken} from "../../actions/login";
 
