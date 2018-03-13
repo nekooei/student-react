@@ -61,11 +61,18 @@ export const login = (username, password) =>
   ).then(data => data.json());
 
 export const getSchools = () =>{
-  console.log(getHeaders(true));
   return fetch(
     getUrl('student/school'),{
       headers : getHeaders(true),
       method: 'GET'
     }
   ).then(data => data.json());
-}
+};
+
+export const getOpenTermOfSchool = (schoolId) =>
+  fetch(
+    getUrl(`student/school/${schoolId}/openTerm`), {
+      headers : getHeaders(true),
+      method: 'GET'
+    }
+  ).then(data => data.json());
