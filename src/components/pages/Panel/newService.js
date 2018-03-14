@@ -5,7 +5,9 @@ import React, {Component} from "react";
 import {connect} from "react-redux";
 import {getDistance, getOpenTermOfSchool, getPrice, getSchools, getTermGroups} from "../../../utils/api";
 import AutoSuggest from "react-autosuggest";
-import {Button, Grid, IconButton, Paper, TextField, Typography, withStyles} from "material-ui";
+import match from "autosuggest-highlight/match";
+import parse from "autosuggest-highlight/parse";
+import {Button, Grid, IconButton, MenuItem, Paper, TextField, withStyles} from "material-ui";
 import {Close, Refresh} from "material-ui-icons";
 import {cancelFetching, setFetching} from "../../../actions/fetch";
 import {setHeaderSubTitle} from "../../../actions/header";
@@ -13,19 +15,42 @@ import VerticalStepper from "../../items/VerticalStepper";
 import ReviewTable from "../../items/ReviewTable";
 
 
-const styles = {
+const styles = theme => ({
   suggestionTypo: {
     '&:hover': {
       cursor: 'pointer'
     },
     width: '50%'
   },
-  acceptButton : {
-    marginLeft : '25%',
-    marginRight : '25%',
+  acceptButton: {
+    marginLeft: '25%',
+    marginRight: '25%',
     marginTop: 10
-  }
-};
+  },
+  container: {
+    flexGrow: 2,
+    position: 'relative',
+
+
+  },
+  suggestionsContainerOpen: {
+    position: 'relative',
+    zIndex: 1,
+    marginTop: theme.spacing.unit,
+    left: 0,
+    right: 0,
+    maxHeight: 150,
+    overflowY: 'scroll'
+  },
+  suggestion: {
+    display: 'block',
+  },
+  suggestionsList: {
+    margin: 0,
+    padding: 0,
+    listStyleType: 'none',
+  },
+});
 
 class NewService extends Component {
   constructor(props) {
@@ -45,12 +70,29 @@ class NewService extends Component {
 
   }
 
-  renderSuggestion = (suggestion, {query, isHighlighted}) => (
-    <Typography className={this.props.classes.suggestionTypo} variant="title"
-                color={isHighlighted ? 'primary' : 'secondary'}>
-      {suggestion}
-    </Typography>
-  );
+  renderSuggestion = (suggestion, {query, isHighlighted}) => {
+    const matches = match(suggestion, query);
+    const parts = parse(suggestion, matches);
+
+    return (
+      <MenuItem selected={isHighlighted} component="div">
+        <div>
+          {parts.map((part, index) => {
+            return part.highlight ? (
+              <span key={String(index)} style={{fontWeight: 300}}>
+              {part.text}
+            </span>
+            ) : (
+              <strong key={String(index)} style={{fontWeight: 500}}>
+                {part.text}
+              </strong>
+            );
+          })}
+        </div>
+      </MenuItem>
+    );
+  };
+
 
 
   getSchoolSuggestionValue = suggestion => suggestion;
@@ -198,7 +240,7 @@ class NewService extends Component {
       getPrice(this.state.schoolSelected.id, this.state.schoolSelected.openTerm.id
         , this.state.schoolSelected.termGroup.id, this.state.schoolSelected.distance)
         .then(response => {
-          if(response.success){
+          if (response.success) {
             this.setState({
               priceReview: response.payload
             }, () => {
@@ -297,6 +339,8 @@ class NewService extends Component {
   };
 
   getStepContent = (step) => {
+    const { classes } = this.props;
+
     switch (step) {
       case 0:
         return (
@@ -309,6 +353,11 @@ class NewService extends Component {
 
               <AutoSuggest
                 id={'schoolSelector-‍'.concat(step)}
+                theme={{
+                  suggestionsContainerOpen: classes.suggestionsContainerOpen,
+                  suggestionsList: classes.suggestionsList,
+                  suggestion: classes.suggestion,
+                }}
                 suggestions={this.state.schools.suggestions}
                 getSuggestionValue={this.getSchoolSuggestionValue}
                 onSuggestionsFetchRequested={this.onSchoolSuggestionsFetchRequested}
@@ -325,7 +374,7 @@ class NewService extends Component {
                   onChange: this.onChangeSchool,
                   value: this.state.schools.value,
                   disabled: Boolean(this.props.fetching || this.state.schoolSelected),
-                  inputRef : this.storeSchoolInputComponent
+                  inputRef: this.storeSchoolInputComponent
 
                 }}
               />
@@ -344,6 +393,11 @@ class NewService extends Component {
             <Grid item xs={12}>
 
               <AutoSuggest
+                theme={{
+                  suggestionsContainerOpen: classes.suggestionsContainerOpen,
+                  suggestionsList: classes.suggestionsList,
+                  suggestion: classes.suggestion,
+                }}
                 id={'schoolSelector-‍'.concat(step)}
                 suggestions={this.state.termGroups.suggestions}
                 getSuggestionValue={this.getTermGroupSuggestionValue}
@@ -361,7 +415,7 @@ class NewService extends Component {
                   onChange: this.onChangeTermGroup,
                   value: this.state.termGroups.value,
                   disabled: Boolean(this.props.fetching || (this.state.schoolSelected && this.state.schoolSelected.termGroup)),
-                  inputRef : this.storeTermGroupInputComponent
+                  inputRef: this.storeTermGroupInputComponent
                 }}
               />
             </Grid>
@@ -408,7 +462,8 @@ class NewService extends Component {
       <Grid container
             direction="row"
             alignItems="center"
-            justify="center">
+            justify="center"
+            spacing={0}>
         <Grid item
               xs={9}>
 
