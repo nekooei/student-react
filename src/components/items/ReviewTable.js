@@ -3,16 +3,13 @@
  */
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Table, TableBody, TableCell, TableHead, TableRow} from "material-ui";
+import {Table, TableBody, TableCell, TableRow} from "material-ui";
 
 
 class ReviewTable extends Component {
   render() {
     return (
       <Table>
-        <TableHead>
-
-        </TableHead>
         <TableBody>
           {Object.keys(this.props.data).map(key => (
             <TableRow id={key}>
