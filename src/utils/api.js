@@ -76,3 +76,11 @@ export const getOpenTermOfSchool = (schoolId) =>
       method: 'GET'
     }
   ).then(data => data.json());
+
+export const getTermGroups = (openTermId) =>
+  fetch(
+    getUrl(`student/${openTermId}/termGroup`),{
+      headers : getHeaders(true),
+      method: 'GET'
+    }
+  ).then(data => data.json());
