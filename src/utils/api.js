@@ -84,3 +84,22 @@ export const getTermGroups = (openTermId) =>
       method: 'GET'
     }
   ).then(data => data.json());
+
+export const getDistance = (schoolId) =>
+  fetch(
+    getUrl(`student/${schoolId}/distance`),{
+      headers: getHeaders(true),
+      method: 'GET'
+    }
+  ).then(data => data.json());
+
+export const getPrice = (schoolId, termId, termGroupId, distance) =>
+  fetch(
+    getUrl('student/servicePrice'), {
+      headers: getHeaders(true),
+      body : JSON.stringify({
+        termId, schoolId, termGroupId, distance
+      }),
+      method: 'POST'
+    }
+  ).then(data => data.json());
