@@ -15,7 +15,8 @@ const style = {
     paddingTop: 110
   },
   container : {
-    margin: -30
+    marginRight: 'auto',
+    marginLeft : 'auto'
   }
 };
 
@@ -26,7 +27,7 @@ class App extends Component {
   render() {
     const { classes } = this.props;
     return (
-      <Grid className={classes.container} container>
+      <Grid className={classes.container} container spacing={0}>
         <div className={classes.root}>
           <NavBar/>
           <Switch>

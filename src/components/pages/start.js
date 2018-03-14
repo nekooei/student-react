@@ -185,7 +185,7 @@ class StartPage extends Component {
         <Grid container
               direction="row"
               alignItems="center"
-              justify="center">
+              justify="center" spacing={0}>
           <Grid
             item xs={10} md={4} lg={4}>
             <Paper elevation={20}>
