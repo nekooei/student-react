@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "autosuggest-highlight": "^3.1.1",
     "google-map-react": "^0.32.0",
     "jalali-moment": "^3.0.10",
     "jss": "^9.5.1",
@@ -14,13 +15,15 @@
     "material-ui-time-picker": "^0.1.5",
     "prop-types": "^15.6.0",
     "react": "^16.2.0",
+    "react-autosuggest": "^9.3.4",
     "react-dom": "^16.2.0",
     "react-jss": "^8.2.1",
     "react-redux": "^5.0.6",
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.1.0",
     "redux": "^3.7.2",
-    "redux-thunk": "^2.2.0"
+    "redux-thunk": "^2.2.0",
+    "typeface-roboto": "^0.0.54"
   },
   "scripts": {
     "start": "react-scripts start",
