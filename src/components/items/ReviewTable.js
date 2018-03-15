@@ -4,15 +4,23 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Table, TableBody, TableCell, TableRow} from "material-ui";
+import withStyles from "material-ui/es/styles/withStyles";
 
+const styles = {
+  table: {
+    width: '100%'
+  }
+};
 
 class ReviewTable extends Component {
+
   render() {
+    const {classes} = this.props;
     return (
-      <Table>
+      <Table className={classes.table}>
         <TableBody>
           {Object.keys(this.props.data).map(key => (
-            <TableRow id={key}>
+            <TableRow id={key} hover >
               <TableCell>
                 {key}
               </TableCell>
@@ -34,4 +42,4 @@ ReviewTable.defaultProps = {
   data : {}
 };
 
-export default ReviewTable;
+export default withStyles(styles)(ReviewTable);
