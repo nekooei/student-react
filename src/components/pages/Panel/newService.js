@@ -3,12 +3,26 @@
  */
 import React, {Component} from "react";
 import {connect} from "react-redux";
-import {getDistance, getOpenTermOfSchool, getPrice, getSchools, getTermGroups} from "../../../utils/api";
+import {getDistance,
+  getOpenTermOfSchool,
+  getPrice,
+  getSchools,
+  getTermGroups,
+  createServiceRequest
+} from "../../../utils/api";
 import AutoSuggest from "react-autosuggest";
-import match from "autosuggest-highlight/match";
-import parse from "autosuggest-highlight/parse";
-import {Button, Grid, IconButton, MenuItem, Paper, TextField, withStyles} from "material-ui";
-import {Close, Refresh} from "material-ui-icons";
+import {
+  Button,
+  Grid,
+  IconButton,
+  ListItemIcon,
+  ListItemText,
+  MenuItem,
+  Paper,
+  TextField, Typography,
+  withStyles
+} from "material-ui";
+import {Close, Refresh, School, Schedule} from "material-ui-icons";
 import {cancelFetching, setFetching} from "../../../actions/fetch";
 import {setHeaderSubTitle} from "../../../actions/header";
 import VerticalStepper from "../../items/VerticalStepper";
@@ -40,7 +54,7 @@ const styles = theme => ({
     left: 0,
     right: 0,
     maxHeight: 150,
-    overflowY: 'scroll'
+    overflowY: 'auto'
   },
   suggestion: {
     display: 'block',
@@ -71,28 +85,15 @@ class NewService extends Component {
   }
 
   renderSuggestion = (suggestion, {query, isHighlighted}) => {
-    const matches = match(suggestion, query);
-    const parts = parse(suggestion, matches);
-
     return (
       <MenuItem selected={isHighlighted} component="div">
-        <div>
-          {parts.map((part, index) => {
-            return part.highlight ? (
-              <span key={String(index)} style={{fontWeight: 300}}>
-              {part.text}
-            </span>
-            ) : (
-              <strong key={String(index)} style={{fontWeight: 500}}>
-                {part.text}
-              </strong>
-            );
-          })}
-        </div>
+        <ListItemIcon>
+          { !Boolean(this.state.schoolSelected) ? <School /> : <Schedule/>}
+        </ListItemIcon>
+        <ListItemText inset primary={<p>{suggestion}</p>}/>
       </MenuItem>
     );
   };
-
 
 
   getSchoolSuggestionValue = suggestion => suggestion;
@@ -330,7 +331,22 @@ class NewService extends Component {
   };
 
   submitServiceRequest = () => {
+    const {schoolSelected, priceReview} = this.state;
+    //todo : store service request here
+    //this.props.setFetching();
+    this.nextStep(); // todo : remove next step from here
 
+    /*createServiceRequest(schoolSelected.termGroup.id, priceReview.distance, priceReview.totalPrice, 0, priceReview.totalPrice)
+      .then(response => {
+        this.props.cancelFetching();
+        if(response.success){
+          this.setState({
+            serviceRequest : response.payload
+          }, () => {
+            this.nextStep();
+          });
+        }
+      });*/
   };
 
 
@@ -339,7 +355,7 @@ class NewService extends Component {
   };
 
   getStepContent = (step) => {
-    const { classes } = this.props;
+    const {classes} = this.props;
 
     switch (step) {
       case 0:
@@ -434,7 +450,8 @@ class NewService extends Component {
 
               <ReviewTable data={this.state.priceReview ? {
                 'نام موسسه': this.state.priceReview.school,
-                'گروه آموزشی': this.state.priceReview.groupCaption,
+                'گروه زمانی': this.state.priceReview.groupCaption,
+                'مسافت(کیلومتر)': this.state.priceReview.distance,
                 'نرخ هر کیلومتر (تومان)': this.state.priceReview.priceUnit,
                 'تاریخ شروع کلاس ها': `${this.state.priceReview.startDate[0]}${this.state.priceReview.startDate[1]}${this.state.priceReview.startDate[2]}${this.state.priceReview.startDate[3]}/${this.state.priceReview.startDate[4]}${this.state.priceReview.startDate[5]}/${this.state.priceReview.startDate[6]}${this.state.priceReview.startDate[7]}`,
                 'تاریخ پایان کلاس ها': `${this.state.priceReview.endDate[0]}${this.state.priceReview.endDate[1]}${this.state.priceReview.endDate[2]}${this.state.priceReview.endDate[3]}/${this.state.priceReview.endDate[4]}${this.state.priceReview.endDate[5]}/${this.state.priceReview.endDate[6]}${this.state.priceReview.endDate[7]}`,
@@ -448,6 +465,29 @@ class NewService extends Component {
 
               <Button raised onClick={this.submitServiceRequest} color={'primary'}>تایید</Button>
             </Grid>
+          </Grid>
+        );
+      case 3:
+        return(
+          <Grid container
+                direction="column"
+                alignItems="center"
+                justify="center">
+            <Grid item xs={12}>
+              <Typography variant="heading">انتخاب روش پرداخت</Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <ReviewTable data={this.state.priceReview ? {
+                // todo : read service price from {this.state.serviceRequest}
+                'مبلغ (تومان)': this.state.priceReview.totalPrice,
+                'درگاه': 'بانک سامان'
+              } : {}}/>
+            </Grid>
+
+            <Grid item xs={12}>
+              <Button raised color={'secondary'}>پرداخت</Button>
+            </Grid>
+
           </Grid>
         );
       default:
@@ -465,7 +505,7 @@ class NewService extends Component {
             justify="center"
             spacing={0}>
         <Grid item
-              xs={9}>
+              xs={10} md={9} lg={9}>
 
           <Paper elevation={20}>
 
@@ -473,7 +513,7 @@ class NewService extends Component {
               <Grid container
                     direction="row"
                     alignItems="flex-end"
-                    justify="space-between" spacing={40}>
+                    justify="space-between" >
                 <Grid item>
                   <IconButton color={'primary'}
                               onClick={this.reset}>
