@@ -320,7 +320,7 @@ class Register extends Component {
         // render form for user information
         return (
           <div>
-            <Grid container>
+            <Grid container >
               <Grid item xs={12}>
                 <FormControl margin={'root'} fullWidth >
                   <FormControlLabel disabled control={ <TextField
@@ -561,13 +561,13 @@ class Register extends Component {
     return (
       <div>
         <Grid container
-
+              spacing={0}
               direction="row"
               alignItems="center"
               justify="center">
           <Grid
             item xs={12} md={9} lg={9}>
-            <Paper>
+            <Paper elevation={10}>
               <Grid container
                     direction="column"
                     alignItems="center"
@@ -583,7 +583,7 @@ class Register extends Component {
                   <Grid container
                         direction='column'
                         alignItems='center'
-                        justify='center'>
+                        justify='center' spacing={16}>
                     <Stepper
                       className={classes.stepper}
                       alternativeLabel nonLinear activeStep={this.state.activeStep}>
