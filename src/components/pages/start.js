@@ -42,6 +42,15 @@ const style = {
   },
   form: {
     padding: 10
+  },
+  padding10 : {
+    padding : 50
+  },
+  textInputAlignment: {
+    direction: 'ltr'
+  },
+  textInput: {
+     margin: 20
   }
 };
 
@@ -124,9 +133,16 @@ class StartPage extends Component {
                   registerChecked : true,
                   registration: false
                 },
+                errors:{
+                  ...prevState.errors,
+                  emailError: {
+                    hasError: false,
+                    errorMsg: ''
+                  },
+                },
                 buttonText: 'ورود'
               }
-            })
+            }, () => this.passwordInput.focus())
           } else if (res.error) {
             localStorage.nationalCode = this.nationalCodeInput.value;
             this.props.history.push('/register');
@@ -178,6 +194,30 @@ class StartPage extends Component {
 
   }
 
+  changeNationalCode = () => {
+    if(this.state.isRegistered){
+      this.setState(prevState => {
+        return{
+          ...prevState,
+          isRegistered: false,
+          step : {
+            ...[prevState.step],
+            registerChecked : false,
+            registration: false
+          },
+          errors:{
+            ...prevState.errors,
+            emailError: {
+              hasError: false,
+              errorMsg: ''
+            },
+          },
+          buttonText: 'بعدی'
+        }
+      }, () => this.nationalCodeInput.focus())
+    }
+  };
+
   render() {
     const {classes} = this.props;
     return (
@@ -187,8 +227,8 @@ class StartPage extends Component {
               alignItems="center"
               justify="center" spacing={0}>
           <Grid
-            item xs={10} md={4} lg={4}>
-            <Paper elevation={20}>
+            item xs={10} md={4} lg={4} >
+            <Paper elevation={20} className={classes.padding10} >
               <Grid container
                     direction="column"
                     alignItems="center"
@@ -200,7 +240,7 @@ class StartPage extends Component {
               </Grid>
               <Grid container
                     direction="row"
-                    alignItems="center" spacing={0}
+                    alignItems="center" spacing={16}
                     justify="center">
                 <Grid item xs={10} className={classes.form}>
                   <Grid container
@@ -211,12 +251,16 @@ class StartPage extends Component {
                                type="number"
                                helperText={this.state.errors.emailError.hasError ? this.state.errors.emailError.errorMsg : ''}
                                inputRef={input => this.nationalCodeInput = input} label='کدملی'
-                               style={{width: '100%', margin: 20}}/>
+                               fullWidth
+                               onChange={this.changeNationalCode}
+                               onKeyDown={(event) => {if(event.keyCode === 13) this.nextStep()}}
+                               className={[classes.textInputAlignment, classes.textInput]}
+                              />
                     {this.state.isRegistered ? (
                       <TextField type='password' inputRef={input => this.passwordInput = input} label='رمز عبور'
-                                 error={this.state.errors.passwordError.hasError}
+                                 error={this.state.errors.passwordError.hasError} fullWidth
                                  helperText={this.state.errors.passwordError.hasError ? this.state.errors.passwordError.errorMsg : ''}
-                                 style={{width: '100%', margin: 20}}/>
+                                 className={classes.textInput}/>
                     ) : null}
                     <Button raised color='primary' onClick={this.nextStep}>{this.state.buttonText}</Button>
                   </Grid>
