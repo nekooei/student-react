@@ -260,6 +260,7 @@ class StartPage extends Component {
                       <TextField type='password' inputRef={input => this.passwordInput = input} label='رمز عبور'
                                  error={this.state.errors.passwordError.hasError} fullWidth
                                  helperText={this.state.errors.passwordError.hasError ? this.state.errors.passwordError.errorMsg : ''}
+                                 onKeyDown={(event) => {if(event.keyCode === 13) this.nextStep()}}
                                  className={classes.textInput}/>
                     ) : null}
                     <Button raised color='primary' onClick={this.nextStep}>{this.state.buttonText}</Button>
