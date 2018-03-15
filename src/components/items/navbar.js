@@ -49,7 +49,7 @@ class NavBar extends Component {
     const auth = !!this.props.loginInfo.token;
     return (
       <div className={classes.root}>
-        <AppBar>
+        <AppBar position={'fixed'}>
 
           <Toolbar>
             <Typography type="title" color="inherit"  className={classes.flex}>
