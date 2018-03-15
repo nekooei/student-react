@@ -1,7 +1,7 @@
 /**
  * Created by milad on 1/27/18.
  */
-const SERVER_IP_OR_ADDRESS = 'http://localhost';
+const SERVER_IP_OR_ADDRESS = 'http://192.168.1.102';
 const SERVER_PORT = 65000;
 
 const getUrl = (route) => `${SERVER_IP_OR_ADDRESS}:${SERVER_PORT}/v1/${route}`;
@@ -101,5 +101,15 @@ export const getPrice = (schoolId, termId, termGroupId, distance) =>
         termId, schoolId, termGroupId, distance
       }),
       method: 'POST'
+    }
+  ).then(data => data.json());
+
+export const createServiceRequest = (termGroupId, distance, totalPrice, discountPrice, finalPrice) =>
+  fetch(
+    getUrl('student/createRequest'), {
+      headers: getHeaders(true),
+      body : JSON.stringify({
+        termGroupId, distance, totalPrice, discountPrice, finalPrice
+      })
     }
   ).then(data => data.json());
