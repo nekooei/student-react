@@ -3,13 +3,7 @@
  */
 import React, {Component} from "react";
 import {connect} from "react-redux";
-import {getDistance,
-  getOpenTermOfSchool,
-  getPrice,
-  getSchools,
-  getTermGroups,
-  createServiceRequest
-} from "../../../utils/api";
+import {getDistance, getOpenTermOfSchool, getPrice, getSchools, getTermGroups} from "../../../utils/api";
 import AutoSuggest from "react-autosuggest";
 import {
   Button,
@@ -19,10 +13,12 @@ import {
   ListItemText,
   MenuItem,
   Paper,
-  TextField, Typography,
+  TextField,
+  Tooltip,
+  Typography,
   withStyles
 } from "material-ui";
-import {Close, Refresh, School, Schedule} from "material-ui-icons";
+import {Close, Refresh, Schedule, School} from "material-ui-icons";
 import {cancelFetching, setFetching} from "../../../actions/fetch";
 import {setHeaderSubTitle} from "../../../actions/header";
 import VerticalStepper from "../../items/VerticalStepper";
@@ -274,6 +270,10 @@ class NewService extends Component {
             }, () => {
               this.getOpenTerm();
             });
+          }else {
+            // todo : distance error
+            this.props.cancelFetching();
+            this.reset();
           }
         });
     });
@@ -468,7 +468,7 @@ class NewService extends Component {
           </Grid>
         );
       case 3:
-        return(
+        return (
           <Grid container
                 direction="column"
                 alignItems="center"
@@ -513,19 +513,23 @@ class NewService extends Component {
               <Grid container
                     direction="row"
                     alignItems="flex-end"
-                    justify="space-between" >
+                    justify="space-between">
                 <Grid item>
-                  <IconButton color={'primary'}
-                              onClick={this.reset}>
-                    <Refresh/>
-                  </IconButton>
+                  <Tooltip title={'تلاش مجدد'} placement={'left'}>
+                    <IconButton color={'primary'}
+                                onClick={this.reset}>
+                      <Refresh/>
+                    </IconButton>
+                  </Tooltip>
 
                 </Grid>
                 <Grid item>
-                  <IconButton color={'secondary'}
-                              onClick={this.close}>
-                    <Close/>
-                  </IconButton>
+                  <Tooltip title={'بازگشت'} placement={'right'}>
+                    <IconButton color={'secondary'}
+                                onClick={this.close}>
+                      <Close/>
+                    </IconButton>
+                  </Tooltip>
 
                 </Grid>
 
