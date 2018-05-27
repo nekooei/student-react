@@ -26,7 +26,6 @@ import {cancelFetching, setFetching} from "../../../actions/fetch";
 import {setHeaderSubTitle} from "../../../actions/header";
 import VerticalStepper from "../../items/VerticalStepper";
 import ReviewTable from "../../items/ReviewTable";
-import PostToGatway from "../../items/postToGatway";
 
 
 const styles = theme => ({
@@ -499,7 +498,6 @@ class NewService extends Component {
             </Grid>
 
             <Grid item xs={12}>
-              <PostToGatway token={this.state.payment.token} submitForm={submitFunc => this.formSubmit = submitFunc}/>
               <Button raised color={'secondary'} onClick={() => {window.location = `https://sep.shaparak.ir/payment.aspx?Token=${this.state.payment.token}&RedirectURL=http://localhost:65000/v1/student/verify`}}>پرداخت</Button>
             </Grid>
 
