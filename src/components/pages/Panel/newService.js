@@ -3,7 +3,10 @@
  */
 import React, {Component} from "react";
 import {connect} from "react-redux";
-import {getDistance, getOpenTermOfSchool, getPrice, getSchools, getTermGroups} from "../../../utils/api";
+import {
+  createServiceRequest, getDistance, getOpenTermOfSchool, getPrice, getSchools,
+  getTermGroups, requestForPaymentToken
+} from "../../../utils/api";
 import AutoSuggest from "react-autosuggest";
 import {
   Button,
@@ -17,12 +20,13 @@ import {
   Tooltip,
   Typography,
   withStyles
-} from "material-ui";
+} from "@material-ui/core";
 import {Close, Refresh, Schedule, School} from "material-ui-icons";
 import {cancelFetching, setFetching} from "../../../actions/fetch";
 import {setHeaderSubTitle} from "../../../actions/header";
 import VerticalStepper from "../../items/VerticalStepper";
 import ReviewTable from "../../items/ReviewTable";
+import PostToGatway from "../../items/postToGatway";
 
 
 const styles = theme => ({
@@ -75,6 +79,9 @@ class NewService extends Component {
         all: [],
         suggestions: [],
         value: ''
+      },
+      payment:{
+
       }
     };
 
@@ -95,7 +102,7 @@ class NewService extends Component {
   getSchoolSuggestionValue = suggestion => suggestion;
   getTermGroupSuggestionValue = suggestion => suggestion;
 
-  renderInputComponent(inputProps) {
+  static renderInputComponent(inputProps) {
     return (
       <TextField {...inputProps}/>
     );
@@ -333,20 +340,27 @@ class NewService extends Component {
   submitServiceRequest = () => {
     const {schoolSelected, priceReview} = this.state;
     //todo : store service request here
-    //this.props.setFetching();
-    this.nextStep(); // todo : remove next step from here
-
-    /*createServiceRequest(schoolSelected.termGroup.id, priceReview.distance, priceReview.totalPrice, 0, priceReview.totalPrice)
+    this.props.setFetching();
+    createServiceRequest(schoolSelected.termGroup.id, priceReview.distance, priceReview.totalPrice, 0, priceReview.totalPrice)
       .then(response => {
-        this.props.cancelFetching();
         if(response.success){
           this.setState({
             serviceRequest : response.payload
           }, () => {
-            this.nextStep();
+            requestForPaymentToken(this.state.serviceRequest.finalPrice)
+              .then(response => {
+                this.props.cancelFetching();
+                if(response.success){
+                  this.setState({
+                    payment: response.payload
+                  }, () => {
+                    this.nextStep();
+                  })
+                }
+              })
           });
         }
-      });*/
+      });
   };
 
 
@@ -381,7 +395,7 @@ class NewService extends Component {
                 renderSuggestion={this.renderSuggestion}
                 alwaysRenderSuggestions={!Boolean(this.state.schoolSelected)}
                 onSuggestionSelected={this.selectSchool}
-                renderInputComponent={this.renderInputComponent}
+                renderInputComponent={NewService.renderInputComponent}
                 focusInputOnSuggestionClick={false}
                 inputProps={{
                   type: 'search',
@@ -422,7 +436,7 @@ class NewService extends Component {
                 renderSuggestion={this.renderSuggestion}
                 alwaysRenderSuggestions={Boolean(this.state.schoolSelected) && !Boolean(this.state.schoolSelected.termGroup)}
                 onSuggestionSelected={this.selectTermGroup}
-                renderInputComponent={this.renderInputComponent}
+                renderInputComponent={NewService.renderInputComponent}
                 focusInputOnSuggestionClick={true}
                 inputProps={{
                   type: 'search',
@@ -485,7 +499,8 @@ class NewService extends Component {
             </Grid>
 
             <Grid item xs={12}>
-              <Button raised color={'secondary'}>پرداخت</Button>
+              <PostToGatway token={this.state.payment.token} submitForm={submitFunc => this.formSubmit = submitFunc}/>
+              <Button raised color={'secondary'} onClick={() => {window.location = `https://sep.shaparak.ir/payment.aspx?Token=${this.state.payment.token}&RedirectURL=http://localhost:65000/v1/student/verify`}}>پرداخت</Button>
             </Grid>
 
           </Grid>

@@ -3,7 +3,7 @@
  */
 import React, {Component} from 'react';
 import {MenuItem, Select, TextField} from 'material-ui';
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 
 const styles = theme => ({

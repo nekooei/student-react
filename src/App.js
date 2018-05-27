@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import './App.css';
-import { Grid } from 'material-ui';
+import { Grid } from '@material-ui/core';
 import NavBar from './components/items/navbar';
 import StartPage from './components/pages/start';
 import RegisterPage from './components/pages/register';
 import Panel from './components/pages/panelSwitcher';
-import {withStyles } from 'material-ui/styles'
+import {withStyles } from '@material-ui/core/styles'
 
 import {Route, Switch} from "react-router-dom";
 

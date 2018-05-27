@@ -8,10 +8,10 @@ import {
   Paper,
   TextField,
   Button, Snackbar
-} from 'material-ui';
+} from '@material-ui/core';
 import {
   withStyles
-} from 'material-ui/styles';
+} from '@material-ui/core/styles';
 import {connect} from "react-redux";
 import {
   setFetching,

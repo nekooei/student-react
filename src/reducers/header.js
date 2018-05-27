@@ -12,7 +12,6 @@ export default (state = initState, action ) => {
         ...state,
         subtitle: action.payload
       };
-      break;
     default:
       return state;
   }

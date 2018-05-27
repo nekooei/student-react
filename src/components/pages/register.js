@@ -5,19 +5,19 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {
   Button, Grid, Paper, TextField, Typography, withStyles, Divider,
-  FormControl, FormControlLabel, InputAdornment, IconButton, Icon, Snackbar
-} from "material-ui";
+  FormControl, FormControlLabel, Snackbar,
+  Stepper,Step, StepButton
+} from "@material-ui/core";
 import GoogleMap from 'google-map-react';
-import Stepper, {Step, StepLabel, StepButton} from 'material-ui/Stepper';
 import {GOOGLE_MAP_KEY} from '../../utils/staticData';
 import {connect} from "react-redux";
 import {cancelFetching, setFetching} from "../../actions/fetch";
 import {setHeaderSubTitle} from "../../actions/header";
 import GenderSelector from "../items/GenderSelector";
-import { DatePicker } from 'material-ui-pickers';
-import jalaliUtils from 'material-ui-pickers-jalali-utils';
+
 import jMoment from 'jalali-moment';
 import Marker from "../items/Marker";
+import PersianDatePicker from "../items/PersianDatePicker";
 
 
 
@@ -32,9 +32,10 @@ const style = theme => ({
     width: '100%'
   },
   datePicker :{
-    marginTop : 35,
+    marginTop : 20,
+    marginBottom : 20,
 
-    width: '100%',
+    width: '96%',
 
   },
   fixWidth: {
@@ -44,7 +45,7 @@ const style = theme => ({
   },
   input : {
     width: '100%',
-    margin: 20
+    margin: 20,
   },
   keyboardIcon : {
     height : 0
@@ -265,47 +266,29 @@ class Register extends Component {
                 <FormControl margin={'root'} fullWidth required >
                   <GenderSelector value={this.state.basicInformation.gender} getGenderSelected={(gender) => this.changeGender(gender)}/>
                 </FormControl>
-                <FormControl margin={'root'} fullWidth >
+                <FormControl margin={'root'} fullWidth required >
                   <FormControlLabel control={ <TextField id={'birthPlace'} name={'birthPlace'} inputRef={inputRef => this.birthPlaceRef = inputRef}
                                                          onChange={(event) => this.birthPlaceChange()}
                                                          value={this.state.basicInformation.birthPlace}
                                                          label={'محل تولد'} className={classes.input} />}/>
                 </FormControl>
-                <FormControl margin={'root'} fullWidth >
+                <FormControl margin={'root'} fullWidth required>
                   <FormControlLabel control={ <TextField id={'mobileNumber'} name={'mobileNumber'} inputRef={inputRef => this.mobileNumberRef = inputRef}
                                                          onChange={(event) => this.mobileNumberChange()}
                                                          value={this.state.basicInformation.mobileNumber}
                                                          type={'number'}
                                                          label={'شماره موبایل'} className={classes.input} />}/>
                 </FormControl>
-                <FormControl margin={'root'} fullWidth required className={classes.datePicker} >
-                  <FormControlLabel  control={
-                    <DatePicker
-                      okLabel="تأیید"
-                      label="تاریخ تولد"
-                      className={classes.input}
-                      id={'birthDate'}
-                      cancelLabel="لغو"
-                      maxDate={Date.now()}
-                      inputRef={inputRef => this.birthDateRef = inputRef}
-                      labelFunc={date => date === null  ? '' : jMoment(date).format('jYYYY/jMM/jDD')}
-                      onChange={this.handleDateChange}
-                      value={this.state.selectedDate}
-                      animateYearScrolling
-                      utils={jalaliUtils}
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="start" >
-                            <IconButton className={classes.keyboardIcon}>
-                              <Icon>date_range</Icon>
-                            </IconButton>
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
-                  }/>
-
-                </FormControl>
+                <PersianDatePicker
+                  label="تاریخ تولد"
+                  className={classes.datePicker}
+                  id={'birthDate'}
+                  disableFuture
+                  required
+                  labelFunc={date => (date ? date.format('jYYYY/jMM/jDD') : '')}
+                  onChange={this.handleDateChange}
+                  value={this.state.selectedDate}
+                />
                 <FormControl margin={'root'} fullWidth >
                   <FormControlLabel control={ <TextField multiline id={'description'} name={'description'} inputRef={inputRef => this.descriptionRef = inputRef}
                                                          onChange={event => this.descriptionChange()}

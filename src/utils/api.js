@@ -1,10 +1,10 @@
 /**
  * Created by milad on 1/27/18.
  */
-const SERVER_IP_OR_ADDRESS = 'http://192.168.1.102';
+const SERVER_IP_OR_ADDRESS = 'http://sapi.development.sas';
 const SERVER_PORT = 65000;
 
-const getUrl = (route) => `${SERVER_IP_OR_ADDRESS}:${SERVER_PORT}/v1/${route}`;
+const getUrl = (route) => `${SERVER_IP_OR_ADDRESS}/v1/${route}`;
 
 const getHeaders = (withAuth) => (
   {
@@ -110,6 +110,18 @@ export const createServiceRequest = (termGroupId, distance, totalPrice, discount
       headers: getHeaders(true),
       body : JSON.stringify({
         termGroupId, distance, totalPrice, discountPrice, finalPrice
-      })
+      }),
+      method: 'POST'
+    }
+  ).then(data => data.json());
+
+export const requestForPaymentToken = (amount) =>
+  fetch(
+    getUrl('student/requestPaymentToken'),{
+      headers : getHeaders(true),
+      body: JSON.stringify({
+        amount
+      }),
+      method: 'POST'
     }
   ).then(data => data.json());

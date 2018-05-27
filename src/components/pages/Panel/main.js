@@ -4,8 +4,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Button, Grid, Tab, Tabs} from "material-ui";
-import { withStyles } from 'material-ui/styles';
-import {Add} from 'material-ui-icons';
+import { withStyles } from '@material-ui/core/styles';
+import {Add} from '@material-ui/icons';
 import {cancelFetching, setFetching} from "../../../actions/fetch";
 import {setHeaderSubTitle} from "../../../actions/header";
 
@@ -14,7 +14,9 @@ const style = theme => ({
     flexGrow: 1,
   },
   tabs: {
-    width : '100%'
+    width : '100%',
+
+    marginRight: 10
   },
   fab: {
     margin: 0,
@@ -47,7 +49,7 @@ class MainPanel extends Component {
     const { classes } = this.props;
     const {tabSelected} = this.state;
     return (
-      <div>
+      <div >
         <Tabs
           className={classes.tabs}
           indicatorColor="primary"
@@ -62,7 +64,7 @@ class MainPanel extends Component {
         </Tabs>
         {tabSelected === 0 ? (
           <div>
-            <Grid container>
+            <Grid container spacing={0}>
 
             </Grid>
             <Button href={'/panel/newService'} fab variant="fab" color="primary" aria-label="add" className={classes.fab}>

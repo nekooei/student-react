@@ -7,9 +7,9 @@ import {
   AppBar,
   Toolbar, Typography,
   LinearProgress, Menu, MenuItem, IconButton
-} from 'material-ui';
-import {withStyles} from 'material-ui/styles';
-import {AccountCircle} from "material-ui-icons";
+} from '@material-ui/core';
+import {withStyles} from '@material-ui/core/styles';
+import {AccountCircle} from "@material-ui/icons";
 import {removeUserInfo} from "../../actions/student";
 import {deleteToken} from "../../actions/login";
 
@@ -49,7 +49,7 @@ class NavBar extends Component {
     const auth = !!this.props.loginInfo.token;
     return (
       <div className={classes.root}>
-        <AppBar position={'fixed'}>
+        <AppBar position={'fixed'} >
 
           <Toolbar>
             <Typography type="title" color="inherit"  className={classes.flex}>

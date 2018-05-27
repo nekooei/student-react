@@ -3,7 +3,7 @@
  */
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Table, TableBody, TableCell, TableRow} from "material-ui";
+import {Table, TableBody, TableCell, TableRow} from "@material-ui/core";
 import withStyles from "material-ui/es/styles/withStyles";
 
 const styles = {
