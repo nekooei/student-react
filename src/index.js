@@ -30,9 +30,7 @@ const theme = createMuiTheme({
   direction : 'rtl',
   palette:{
     primary: deepOrange,
-    secondary: {
-      main: purple[900]
-    }
+    secondary: purple
   },
   typography:{
     fontFamily: 'vazir'
