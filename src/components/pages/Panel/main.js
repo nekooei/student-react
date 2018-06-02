@@ -3,7 +3,7 @@
  */
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Button, Grid, Tab, Tabs} from "material-ui";
+import {Button, Grid, Tab, Tabs} from "@material-ui/core";
 import { withStyles } from '@material-ui/core/styles';
 import {Add} from '@material-ui/icons';
 import {cancelFetching, setFetching} from "../../../actions/fetch";

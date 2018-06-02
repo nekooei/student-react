@@ -4,10 +4,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import {Stepper, Step, StepLabel, StepContent } from '@material-ui/core';
-import Button from 'material-ui/Button';
-import Paper from 'material-ui/Paper';
-import Typography from 'material-ui/Typography';
+import {Stepper, Step, StepLabel, StepContent, Button, Paper, Typography } from '@material-ui/core';
 
 const styles = theme => ({
   root: {

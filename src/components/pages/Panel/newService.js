@@ -21,7 +21,7 @@ import {
   Typography,
   withStyles
 } from "@material-ui/core";
-import {Close, Refresh, Schedule, School} from "material-ui-icons";
+import {Close, Refresh, Schedule, School} from "@material-ui/icons";
 import {cancelFetching, setFetching} from "../../../actions/fetch";
 import {setHeaderSubTitle} from "../../../actions/header";
 import VerticalStepper from "../../items/VerticalStepper";

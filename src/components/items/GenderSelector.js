@@ -2,7 +2,7 @@
  * Created by milad on 2/21/18.
  */
 import React, {Component} from 'react';
-import {MenuItem, Select, TextField} from 'material-ui';
+import {MenuItem, TextField} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 

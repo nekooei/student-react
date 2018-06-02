@@ -4,7 +4,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Table, TableBody, TableCell, TableRow} from "@material-ui/core";
-import withStyles from "material-ui/es/styles/withStyles";
+import withStyles from "@material-ui/core/styles/withStyles";
 
 const styles = {
   table: {
