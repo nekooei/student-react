@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import {Switch, Route} from 'react-router-dom';
 import MainPanel from './Panel/main';
 import NewService from './Panel/newService';
+import Success from './Panel/success';
 import {cancelFetching, setFetching} from "../../actions/fetch";
 import {setHeaderSubTitle} from "../../actions/header";
 import {checkToken} from "../../actions/login";
@@ -21,7 +22,7 @@ class Panel extends Component {
 
 
     if(this.props.history.location.pathname === '/panel'){
-      this.props.history.push(this.generatePanelRoute('main'));
+      this.props.history.push(Panel.generatePanelRoute('main'));
     }
     if(!this.props.student.id){
       this.props.checkToken();
@@ -42,6 +43,7 @@ class Panel extends Component {
         <Switch>
           <Route exact path={this.generatePanelRoute('main')} component={MainPanel}/>
           <Route exact path={this.generatePanelRoute('newService')} component={NewService}/>
+          <Route exact path={this.generatePanelRoute('success')} component={Success}/>
         </Switch>
       </div>
     );
