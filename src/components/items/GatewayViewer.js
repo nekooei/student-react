@@ -14,7 +14,8 @@ const style = theme => ({
   },
   content: {
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    alignItems: 'center'
   },
   cardContent: {
     flex: '1',
@@ -44,7 +45,7 @@ class GatewayViewer extends Component {
           <CardMedia src={'img'} image={logo} className={classes.logoImage}/>
           <CardContent className={classes.cardContent}>
             <Radio checked={selected} />
-            <Typography className={classes.nameText} variant={'headline'}>{name}</Typography>
+            <Typography className={classes.nameText} variant={'caption'}>{name}</Typography>
           </CardContent>
         </div>
       </Card>
