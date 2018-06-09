@@ -1,5 +1,6 @@
 import {
   UI_SET_SNACK_BAR,
+  UI_HIDE_SNACK_BAR
 } from '../actions/constants';
 
 const initState = {
@@ -16,6 +17,11 @@ export default (state = initState, action) => {
           show : true,
           message: action.payload
         }
+      };
+    case UI_HIDE_SNACK_BAR:
+      return{
+        ...state,
+        snackBar: {}
       };
     default:
       return state;
