@@ -22,7 +22,7 @@ class Panel extends Component {
 
 
     if(this.props.history.location.pathname === '/panel'){
-      this.props.history.push(Panel.generatePanelRoute('main'));
+      this.props.history.push(this.generatePanelRoute('main'));
     }
     if(!this.props.student.id){
       this.props.checkToken();
@@ -44,6 +44,8 @@ class Panel extends Component {
           <Route exact path={this.generatePanelRoute('main')} component={MainPanel}/>
           <Route exact path={this.generatePanelRoute('newService')} component={NewService}/>
           <Route exact path={this.generatePanelRoute('success')} component={Success}/>
+          <Route exact path={this.generatePanelRoute('failure')} component={Success}/>
+          <Route exact path={this.generatePanelRoute('profile')} component={Success}/>
         </Switch>
       </div>
     );
