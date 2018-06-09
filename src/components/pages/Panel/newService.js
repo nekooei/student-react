@@ -4,8 +4,13 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
 import {
-  createServiceRequest, getDistance, getOpenTermOfSchool, getPrice, getSchools,
-  getTermGroups, requestForPaymentToken
+  createServiceRequest,
+  getDistance,
+  getOpenTermOfSchool,
+  getPrice,
+  getSchools,
+  getTermGroups,
+  getGetways
 } from "../../../utils/api";
 import AutoSuggest from "react-autosuggest";
 import {
@@ -26,6 +31,7 @@ import {cancelFetching, setFetching} from "../../../actions/fetch";
 import {setHeaderSubTitle} from "../../../actions/header";
 import VerticalStepper from "../../items/VerticalStepper";
 import ReviewTable from "../../items/ReviewTable";
+import GatewayViewer from "../../items/GatewayViewer";
 
 
 const styles = theme => ({
@@ -79,9 +85,7 @@ class NewService extends Component {
         suggestions: [],
         value: ''
       },
-      payment:{
-
-      }
+      payment: {}
     };
 
   }
@@ -90,7 +94,7 @@ class NewService extends Component {
     return (
       <MenuItem selected={isHighlighted} component="div">
         <ListItemIcon>
-          { !Boolean(this.state.schoolSelected) ? <School /> : <Schedule/>}
+          {!Boolean(this.state.schoolSelected) ? <School/> : <Schedule/>}
         </ListItemIcon>
         <ListItemText inset primary={<p>{suggestion}</p>}/>
       </MenuItem>
@@ -276,7 +280,7 @@ class NewService extends Component {
             }, () => {
               this.getOpenTerm();
             });
-          }else {
+          } else {
             // todo : distance error
             this.props.cancelFetching();
             this.reset();
@@ -338,25 +342,22 @@ class NewService extends Component {
 
   submitServiceRequest = () => {
     const {schoolSelected, priceReview} = this.state;
-    //todo : store service request here
     this.props.setFetching();
     createServiceRequest(schoolSelected.termGroup.id, priceReview.distance, priceReview.totalPrice, 0, priceReview.totalPrice)
       .then(response => {
-        if(response.success){
+        if (response.success) {
           this.setState({
-            serviceRequest : response.payload
-          }, () => {
-            requestForPaymentToken(this.state.serviceRequest.finalPrice)
+            serviceRequest: response.payload
+          },() => {
+            getGetways()
               .then(response => {
-                this.props.cancelFetching();
                 if(response.success){
+                  this.props.cancelFetching();
                   this.setState({
-                    payment: response.payload
-                  }, () => {
-                    this.nextStep();
-                  })
+                    gateways : response.payload
+                  }, this.nextStep);
                 }
-              })
+              });
           });
         }
       });
@@ -475,8 +476,7 @@ class NewService extends Component {
             </Grid>
 
             <Grid item xs={12}>
-
-              <Button raised onClick={this.submitServiceRequest} color={'primary'}>تایید</Button>
+              <Button variant={'raised'} onClick={this.submitServiceRequest} color={'primary'}>تایید</Button>
             </Grid>
           </Grid>
         );
@@ -497,8 +497,21 @@ class NewService extends Component {
               } : {}}/>
             </Grid>
 
+            <div style={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'center'
+            }}>
+
+              <GatewayViewer name={'سامان'} logo={'https://pay.ir/assets/img/logo.png.pagespeed.ce.DAyscoRFh0.png'}/>
+              <GatewayViewer name={'سامان'} logo={'https://pay.ir/assets/img/logo.png.pagespeed.ce.DAyscoRFh0.png'}/>
+              <GatewayViewer name={'سامان'} logo={'https://pay.ir/assets/img/logo.png.pagespeed.ce.DAyscoRFh0.png'}/>
+            </div>
+
             <Grid item xs={12}>
-              <Button raised color={'secondary'} onClick={() => {window.location = `https://sep.shaparak.ir/payment.aspx?Token=${this.state.payment.token}&RedirectURL=http://localhost:65000/v1/student/verify`}}>پرداخت</Button>
+              <Button raised color={'secondary'} onClick={() => {
+                window.location = `https://sep.shaparak.ir/payment.aspx?Token=${this.state.payment.token}&RedirectURL=http://localhost:65000/v1/student/verify`
+              }}>پرداخت</Button>
             </Grid>
 
           </Grid>
