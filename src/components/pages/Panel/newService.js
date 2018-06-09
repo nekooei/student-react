@@ -4,13 +4,14 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
 import {
+  createPayment,
   createServiceRequest,
   getDistance,
+  getGetways,
   getOpenTermOfSchool,
   getPrice,
   getSchools,
-  getTermGroups,
-  getGetways
+  getTermGroups
 } from "../../../utils/api";
 import AutoSuggest from "react-autosuggest";
 import {
@@ -85,7 +86,8 @@ class NewService extends Component {
         suggestions: [],
         value: ''
       },
-      payment: {}
+      payment: {},
+      selectedGateway: -1
     };
 
   }
@@ -348,13 +350,14 @@ class NewService extends Component {
         if (response.success) {
           this.setState({
             serviceRequest: response.payload
-          },() => {
+          }, () => {
             getGetways()
               .then(response => {
-                if(response.success){
+                if (response.success) {
                   this.props.cancelFetching();
                   this.setState({
-                    gateways : response.payload
+                    gateways: response.payload,
+                    selectedGateway: response.payload.length ? response.payload[0].id : -1
                   }, this.nextStep);
                 }
               });
@@ -363,10 +366,27 @@ class NewService extends Component {
       });
   };
 
+  createPayment = () => {
+    this.props.setFetching();
+    console.log(this.state);
+    const {serviceRequest} = this.state;
+    createPayment({
+      serviceRequestId: serviceRequest.id,
+      amount: serviceRequest.finalPrice,
+      gatewayId: this.state.selectedGateway,
+    })
+      .then(response => console.log(response, this.props.cancelFetching()))
+  }
 
   close = () => {
     this.props.history.goBack();
   };
+
+  onGatewaySelect = (gatewayId) => {
+    this.setState({
+      selectedGateway: gatewayId
+    })
+  }
 
   getStepContent = (step) => {
     const {classes} = this.props;
@@ -487,31 +507,30 @@ class NewService extends Component {
                 alignItems="center"
                 justify="center">
             <Grid item xs={12}>
-              <Typography variant="heading">انتخاب روش پرداخت</Typography>
+              <Typography variant="heading">انتخاب درگاه پرداخت</Typography>
             </Grid>
             <Grid item xs={12}>
               <ReviewTable data={this.state.priceReview ? {
-                // todo : read service price from {this.state.serviceRequest}
                 'مبلغ (تومان)': this.state.priceReview.totalPrice,
-                'درگاه': 'بانک سامان'
               } : {}}/>
             </Grid>
 
-            <div style={{
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'center'
-            }}>
+            {this.state.gateways && this.state.gateways.length ? (
+              <div style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'center'
+              }}>
+                {this.state.gateways.map(gateway => (
+                  <GatewayViewer key={gateway.id} name={gateway.title} logo={gateway.logo} id={gateway.id}
+                                 selected={this.state.selectedGateway == gateway.id} onSelect={this.onGatewaySelect}/>
+                ))}
 
-              <GatewayViewer name={'سامان'} logo={'https://pay.ir/assets/img/logo.png.pagespeed.ce.DAyscoRFh0.png'}/>
-              <GatewayViewer name={'سامان'} logo={'https://pay.ir/assets/img/logo.png.pagespeed.ce.DAyscoRFh0.png'}/>
-              <GatewayViewer name={'سامان'} logo={'https://pay.ir/assets/img/logo.png.pagespeed.ce.DAyscoRFh0.png'}/>
-            </div>
+              </div>
+            ) : null}
 
             <Grid item xs={12}>
-              <Button raised color={'secondary'} onClick={() => {
-                window.location = `https://sep.shaparak.ir/payment.aspx?Token=${this.state.payment.token}&RedirectURL=http://localhost:65000/v1/student/verify`
-              }}>پرداخت</Button>
+              <Button variant={'raised'} color={'secondary'} onClick={this.createPayment}>پرداخت</Button>
             </Grid>
 
           </Grid>
@@ -523,7 +542,6 @@ class NewService extends Component {
 
 
   render() {
-    console.log(this.state);
     return (
       <Grid container
             direction="row"
