@@ -263,7 +263,7 @@ class StartPage extends Component {
                                  onKeyDown={(event) => {if(event.keyCode === 13) this.nextStep()}}
                                  className={classes.textInput}/>
                     ) : null}
-                    <Button raised color='primary' onClick={this.nextStep}>{this.state.buttonText}</Button>
+                    <Button variant={'raised'} color='primary' onClick={this.nextStep}>{this.state.buttonText}</Button>
                   </Grid>
 
                 </Grid>
