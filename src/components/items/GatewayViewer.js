@@ -1,23 +1,32 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { Card, CardContent, CardMedia, Typography} from '@material-ui/core';
+import {Card, CardContent, CardMedia, Radio, Typography} from '@material-ui/core';
 import {withStyles} from '@material-ui/core/styles'
 
 
 const style = theme => ({
-  card : {
-    display: 'flex'
+  card: {
+    display: 'flex',
+    flex : 1,
+    margin: 20,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
-  content : {
+  content: {
     display: 'flex',
     flexDirection: 'column'
   },
   cardContent: {
-    flex: '1 0 auto',
+    flex: '1',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   logoImage: {
-    width: 250,
-    height: 250
+    backgroundSize: 'auto',
+    width: 150,
+    height: 150
   },
   nameText: {
     display: 'flex',
@@ -28,12 +37,13 @@ const style = theme => ({
 
 class GatewayViewer extends Component {
   render() {
-    const {classes, logo, name} = this.props;
+    const {classes, logo, name, selected} = this.props;
     return (
-      <Card className={classes.card} raised>
+      <Card className={classes.card}>
         <div className={classes.content}>
-          <CardMedia src={logo} className={classes.logoImage}/>
+          <CardMedia src={'img'} image={logo} className={classes.logoImage}/>
           <CardContent className={classes.cardContent}>
+            <Radio checked={selected} />
             <Typography className={classes.nameText} variant={'headline'}>{name}</Typography>
           </CardContent>
         </div>
@@ -44,7 +54,8 @@ class GatewayViewer extends Component {
 
 GatewayViewer.propTypes = {
   name: PropTypes.string.isRequired,
-  logo: PropTypes.string.isRequired
+  logo: PropTypes.string.isRequired,
+  selected : PropTypes.bool.isRequired
 };
 
-export default  withStyles(style)(GatewayViewer);
+export default withStyles(style)(GatewayViewer);
