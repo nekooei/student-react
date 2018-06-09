@@ -7,7 +7,7 @@ import {
   Grid,
   Paper,
   TextField,
-  Button, Snackbar
+  Button
 } from '@material-ui/core';
 import {
   withStyles
@@ -17,6 +17,9 @@ import {
   setFetching,
   cancelFetching
 }from '../../actions/fetch';
+import {
+  setSnackBar
+} from '../../actions/ui'
 
 import  {
   setHeaderSubTitle
@@ -73,10 +76,6 @@ class StartPage extends Component {
           hasError: false,
           errorMsg: ''
         }
-      },
-      snackbar: {
-        isOpen: false,
-        message: ''
       },
       buttonText : 'بعدی'
     }
@@ -181,12 +180,7 @@ class StartPage extends Component {
           }else {
             this.passwordInput.value = '';
             this.passwordInput.focus();
-            this.setState({
-              snackbar: {
-                isOpen: true,
-                message: 'نام کاربری یا کلمه عبور اشتباه است.'
-              }
-            })
+            this.props.showSnackBar('نام کاربری یا کلمه عبور اشتباه است.');
           }
         })
     }
@@ -272,10 +266,6 @@ class StartPage extends Component {
             </Paper>
           </Grid>
 
-          <Snackbar open={this.state.snackbar.isOpen} autoHideDuration={6000} anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'center'
-          }} message={this.state.snackbar.message}  onClose={() => this.setState({snackbar: {isOpen : false, message : ''}})}/>
 
         </Grid>
       </div>
@@ -299,7 +289,8 @@ function mapDispatchToProps(dispatch) {
     cancelFetching: () => dispatch(cancelFetching()),
     setSubtitleOfHeader: subtitle => dispatch(setHeaderSubTitle(subtitle)),
     checkToken : () => dispatch(checkToken()),
-    setStudent : () => dispatch(setUserInfo())
+    setStudent : () => dispatch(setUserInfo()),
+    showSnackBar : message => dispatch(setSnackBar(message))
   }
 }
 
