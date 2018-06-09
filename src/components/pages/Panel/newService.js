@@ -374,8 +374,9 @@ class NewService extends Component {
       amount: serviceRequest.finalPrice,
       gatewayId: this.state.selectedGateway,
     }).then(response => {
+      this.props.cancelFetching()
       if(response.success){
-        window.open(`http://sapi.development.sas/v1/payment/start/${response.transId}`);
+        window.location = `http://sapi.development.sas/v1/payment/start/${response.payload.transId}`;
       }
     })
   };
