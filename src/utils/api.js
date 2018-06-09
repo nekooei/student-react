@@ -125,3 +125,11 @@ export const requestForPaymentToken = (amount) =>
       method: 'POST'
     }
   ).then(data => data.json());
+
+export const getGetways = () =>
+  fetch(
+    getUrl('gateway'), {
+      headers : getHeaders(true),
+      method: 'GET'
+    }
+  ).then(data => data.json());
