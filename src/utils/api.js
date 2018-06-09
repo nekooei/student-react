@@ -115,12 +115,14 @@ export const createServiceRequest = (termGroupId, distance, totalPrice, discount
     }
   ).then(data => data.json());
 
-export const requestForPaymentToken = (amount) =>
+export const createPayment = ({amount, serviceRequestId, gatewayId}) =>
   fetch(
-    getUrl('student/requestPaymentToken'),{
+    getUrl('payment/init'),{
       headers : getHeaders(true),
       body: JSON.stringify({
-        amount
+        amount,
+        gatewayId,
+        serviceRequestId
       }),
       method: 'POST'
     }
