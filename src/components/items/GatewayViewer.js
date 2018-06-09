@@ -37,14 +37,20 @@ const style = theme => ({
 });
 
 class GatewayViewer extends Component {
+
+  onSelectGateway = (event) => {
+    this.props.onSelect(event.target.value)
+  }
+
   render() {
-    const {classes, logo, name, selected} = this.props;
+    const {classes, logo, name, selected, id} = this.props;
+    console.log('key', id);
     return (
       <Card className={classes.card}>
         <div className={classes.content}>
           <CardMedia src={'img'} image={logo} className={classes.logoImage}/>
           <CardContent className={classes.cardContent}>
-            <Radio checked={selected} />
+            <Radio value={id} checked={selected} onChange={this.onSelectGateway}/>
             <Typography className={classes.nameText} variant={'caption'}>{name}</Typography>
           </CardContent>
         </div>
@@ -54,9 +60,11 @@ class GatewayViewer extends Component {
 }
 
 GatewayViewer.propTypes = {
+  id: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
   logo: PropTypes.string.isRequired,
-  selected : PropTypes.bool.isRequired
+  selected : PropTypes.bool.isRequired,
+  onSelect : PropTypes.func
 };
 
 export default withStyles(style)(GatewayViewer);
