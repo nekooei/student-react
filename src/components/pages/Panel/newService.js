@@ -368,15 +368,17 @@ class NewService extends Component {
 
   createPayment = () => {
     this.props.setFetching();
-    console.log(this.state);
     const {serviceRequest} = this.state;
     createPayment({
       serviceRequestId: serviceRequest.id,
       amount: serviceRequest.finalPrice,
       gatewayId: this.state.selectedGateway,
+    }).then(response => {
+      if(response.success){
+        window.open(`http://sapi.development.sas/v1/payment/start/${response.transId}`);
+      }
     })
-      .then(response => console.log(response, this.props.cancelFetching()))
-  }
+  };
 
   close = () => {
     this.props.history.goBack();
