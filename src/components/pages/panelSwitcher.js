@@ -3,7 +3,7 @@
  */
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import {Switch, Route} from 'react-router-dom';
+import {Switch, Route, Redirect} from 'react-router-dom';
 import MainPanel from './Panel/main';
 import NewService from './Panel/newService';
 import Success from './Panel/success';
@@ -36,7 +36,10 @@ class Panel extends Component {
   render() {
     if(!localStorage.token || localStorage.token.length === 0){
       localStorage.clear();
-      this.props.history.push('/');
+      console.log('hello')
+      return(
+        <Redirect to={'/'} />
+      )
     }
     return (
       <div>
