@@ -40,7 +40,7 @@ class Failure extends Component {
                   <Typography>پرداخت شما ناموفق بوده!</Typography>
                 </Grid>
                 <Grid item xs={12}>
-                  <Button className={classes.button}>
+                  <Button className={classes.button} onClick={() => this.props.history.push('/panel/main')}>
                     بازگشت
                     <SubdirectoryArrowLeft/>
                   </Button>

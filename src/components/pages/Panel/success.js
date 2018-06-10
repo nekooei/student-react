@@ -38,7 +38,7 @@ class Success extends Component {
                   <Typography>پرداخت با موفقیت انجام شد.</Typography>
                 </Grid>
                 <Grid item xs={12}>
-                  <Button className={classes.button} color={'secondary'}>
+                  <Button className={classes.button} onClick={() => this.props.history.push('/panel/main')}>
                     بازگشت
                     <SubdirectoryArrowLeft/>
                   </Button>

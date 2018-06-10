@@ -40,7 +40,7 @@ class ExpiredPayment extends Component {
                   <Typography>تراکنش نا معتبر!</Typography>
                 </Grid>
                 <Grid item xs={12}>
-                  <Button className={classes.button}>
+                  <Button className={classes.button} onClick={() => this.props.history.push('/panel/main')}>
                     بازگشت
                     <SubdirectoryArrowLeft/>
                   </Button>
