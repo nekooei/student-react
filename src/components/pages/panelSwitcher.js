@@ -7,6 +7,9 @@ import {Switch, Route, Redirect} from 'react-router-dom';
 import MainPanel from './Panel/main';
 import NewService from './Panel/newService';
 import Success from './Panel/success';
+import Failure from './Panel/failure';
+import ExpiredPayment from './Panel/expiredPayment';
+import InvalidPaymentInformation from './Panel/invalidPaymentInformation';
 import {cancelFetching, setFetching} from "../../actions/fetch";
 import {setHeaderSubTitle} from "../../actions/header";
 import {checkToken} from "../../actions/login";
@@ -36,7 +39,6 @@ class Panel extends Component {
   render() {
     if(!localStorage.token || localStorage.token.length === 0){
       localStorage.clear();
-      console.log('hello')
       return(
         <Redirect to={'/'} />
       )
@@ -47,7 +49,9 @@ class Panel extends Component {
           <Route exact path={this.generatePanelRoute('main')} component={MainPanel}/>
           <Route exact path={this.generatePanelRoute('newService')} component={NewService}/>
           <Route exact path={this.generatePanelRoute('success')} component={Success}/>
-          <Route exact path={this.generatePanelRoute('failure')} component={Success}/>
+          <Route exact path={this.generatePanelRoute('failure')} component={Failure}/>
+          <Route exact path={this.generatePanelRoute('invalidPaymentInformation')} component={InvalidPaymentInformation}/>
+          <Route exact path={this.generatePanelRoute('expiredPayment')} component={ExpiredPayment}/>
           <Route exact path={this.generatePanelRoute('profile')} component={Success}/>
         </Switch>
       </div>
