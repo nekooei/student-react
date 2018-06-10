@@ -18,7 +18,7 @@ const style = () => ({
   },
 });
 
-class Failure extends Component {
+class ExpiredPayment extends Component {
   render() {
     const {classes} = this.props;
     return (
@@ -55,4 +55,4 @@ class Failure extends Component {
 }
 
 
-export default withStyles(style)(Failure);
+export default withStyles(style)(ExpiredPayment);
