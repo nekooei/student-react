@@ -9,7 +9,7 @@ import Panel from './components/pages/panelSwitcher';
 import {withStyles } from '@material-ui/core/styles'
 import {connect} from 'react-redux';
 
-import {Route, Switch} from "react-router-dom";
+import {Route, Switch, withRouter} from "react-router-dom";
 import {setSnackBar, hideSnackBar} from "./actions/ui";
 
 const style = {
@@ -76,4 +76,4 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(style)(App));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(withStyles(style)(App)));
