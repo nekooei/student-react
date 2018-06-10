@@ -5,7 +5,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {
   Button, Grid, Paper, TextField, Typography, withStyles, Divider,
-  FormControl, FormControlLabel, Snackbar,
+  FormControl, FormControlLabel,
   Stepper,Step, StepButton
 } from "@material-ui/core";
 import GoogleMap from 'google-map-react';
@@ -18,6 +18,7 @@ import GenderSelector from "../items/GenderSelector";
 import jMoment from 'jalali-moment';
 import Marker from "../items/Marker";
 import PersianDatePicker from "../items/PersianDatePicker";
+import {setSnackBar} from "../../actions/ui";
 
 
 
@@ -79,10 +80,6 @@ class Register extends Component {
       completed: new Set(),
       skipped: new Set(),
       selectedDate: new Date(),
-      snackbar: {
-        isOpen: false,
-        message: ''
-      },
       basicInformation :{
         fullName: '',
         nationalCode: localStorage.nationalCode,
@@ -382,12 +379,7 @@ class Register extends Component {
 
   componentDidMount(){
     this.props.setSubtitleOfHeader('ثبت نام');
-    this.setState({
-      snackbar:{
-        isOpen: true,
-        message: 'کد ملی شما در سیستم یافت نشد. لطفا در سیستم ثبت نام کنید.'
-      }
-    })
+    this.props.showSnackBar('کد ملی شما در سیستم یافت نشد. لطفا در سیستم ثبت نام کنید.');
    /* this.setState(prevState=> ({
       ...prevState,
       basicInformation : {
@@ -626,10 +618,6 @@ class Register extends Component {
             </Paper>
           </Grid>
 
-          <Snackbar open={this.state.snackbar.isOpen} autoHideDuration={6000} anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'center'
-          }} message={this.state.snackbar.message}  onClose={() => this.setState({snackbar: {isOpen : false, message : ''}})}/>
 
         </Grid>
       </div>
@@ -654,7 +642,8 @@ function mapDispatchToProps(dispatch) {
   return {
     setFetching: () => dispatch(setFetching()),
     cancelFetching: () => dispatch(cancelFetching()),
-    setSubtitleOfHeader : subtitle => dispatch(setHeaderSubTitle(subtitle))
+    setSubtitleOfHeader : subtitle => dispatch(setHeaderSubTitle(subtitle)),
+    showSnackBar : message => dispatch(setSnackBar(message))
   }
 }
 
