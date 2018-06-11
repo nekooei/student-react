@@ -1,7 +1,7 @@
 /**
  * Created by milad on 1/27/18.
  */
-const SERVER_IP_OR_ADDRESS = 'http://sapi.development.sas';
+const SERVER_IP_OR_ADDRESS = 'http://localhost:65000';
 const SERVER_PORT = 65000;
 
 const getUrl = (route) => `${SERVER_IP_OR_ADDRESS}/v1/${route}`;
@@ -132,6 +132,15 @@ export const getGetways = () =>
   fetch(
     getUrl('gateway'), {
       headers : getHeaders(true),
+      method: 'GET'
+    }
+  ).then(data => data.json());
+
+
+export const getPayements = () =>
+  fetch(
+    getUrl('payment'),{
+      headers: getHeaders(true),
       method: 'GET'
     }
   ).then(data => data.json());
