@@ -2,8 +2,8 @@
  * Created by milad on 3/4/18.
  */
 import React, {Component} from 'react';
-import { connect } from 'react-redux';
-import {Switch, Route, Redirect} from 'react-router-dom';
+import {connect} from 'react-redux';
+import {Redirect, Route, Switch, withRouter} from 'react-router-dom';
 import MainPanel from './Panel/main';
 import NewService from './Panel/newService';
 import Success from './Panel/success';
@@ -16,31 +16,32 @@ import {checkToken} from "../../actions/login";
 import {setUserInfo} from "../../actions/student";
 
 class Panel extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
 
   }
 
-  componentDidMount(){
+  componentDidMount() {
 
 
-    if(this.props.history.location.pathname === '/panel'){
+    if (this.props.history.location.pathname === '/panel') {
       this.props.history.push(this.generatePanelRoute('main'));
     }
-    if(!this.props.student.id){
+    if (!this.props.student.id) {
       this.props.checkToken();
       this.props.setStudent();
     }
   }
 
-  generatePanelRoute(endPoint){
+  generatePanelRoute(endPoint) {
     return `/panel/${endPoint}`;
   }
+
   render() {
-    if(!localStorage.token || localStorage.token.length === 0){
+    if (!localStorage.token || localStorage.token.length === 0) {
       localStorage.clear();
-      return(
-        <Redirect to={'/'} />
+      return (
+        <Redirect to={'/'}/>
       )
     }
     return (
@@ -50,7 +51,8 @@ class Panel extends Component {
           <Route exact path={this.generatePanelRoute('newService')} component={NewService}/>
           <Route exact path={this.generatePanelRoute('success')} component={Success}/>
           <Route exact path={this.generatePanelRoute('failure')} component={Failure}/>
-          <Route exact path={this.generatePanelRoute('invalidPaymentInformation')} component={InvalidPaymentInformation}/>
+          <Route exact path={this.generatePanelRoute('invalidPaymentInformation')}
+                 component={InvalidPaymentInformation}/>
           <Route exact path={this.generatePanelRoute('expiredPayment')} component={ExpiredPayment}/>
           <Route exact path={this.generatePanelRoute('profile')} component={Success}/>
         </Switch>
@@ -70,10 +72,13 @@ function mapDispatchToProps(dispatch) {
     setFetching: () => dispatch(setFetching()),
     cancelFetching: () => dispatch(cancelFetching()),
     setSubtitleOfHeader: subtitle => dispatch(setHeaderSubTitle(subtitle)),
-    checkToken : () => dispatch(checkToken()),
-    setStudent : () => dispatch(setUserInfo())
+    checkToken: () => dispatch(checkToken()),
+    setStudent: () => dispatch(setUserInfo())
   }
 }
 
+const PanelConnectedToRedux = connect(mapStateToProps, mapDispatchToProps)(Panel);
 
-export default connect(mapStateToProps, mapDispatchToProps)(Panel);
+const PanelAndReduxWithRoutes = withRouter(PanelConnectedToRedux);
+
+export default PanelAndReduxWithRoutes;
