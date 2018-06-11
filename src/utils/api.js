@@ -137,7 +137,7 @@ export const getGetways = () =>
   ).then(data => data.json());
 
 
-export const getPayements = () =>
+export const getPayments = () =>
   fetch(
     getUrl('payment'),{
       headers: getHeaders(true),
