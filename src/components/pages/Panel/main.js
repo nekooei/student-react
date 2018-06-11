@@ -3,14 +3,12 @@
  */
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Button, Grid, Tab, Tabs} from "@material-ui/core";
-import { withStyles } from '@material-ui/core/styles';
+import {Button, Grid, Tab, Tabs, Tooltip} from "@material-ui/core";
+import {withStyles} from '@material-ui/core/styles';
 import {Add} from '@material-ui/icons';
 import {cancelFetching, setFetching} from "../../../actions/fetch";
 import {setHeaderSubTitle} from "../../../actions/header";
-import {
-  getPayements
-} from '../../../utils/api';
+import {getPayements} from '../../../utils/api';
 import Payment from "../../items/Payment";
 
 const style = theme => ({
@@ -18,7 +16,7 @@ const style = theme => ({
     flexGrow: 1,
   },
   tabs: {
-    width : '100%',
+    width: '100%',
 
     marginRight: 10
   },
@@ -31,12 +29,12 @@ const style = theme => ({
     position: 'fixed',
 
   },
-  paymentsContainer:{
+  paymentsContainer: {
     marginTop: 10,
     flex: 1
 
   },
-  paymentItem : {
+  paymentItem: {
     margin: 5,
     flex: 1
   }
@@ -48,14 +46,14 @@ class MainPanel extends Component {
   };
 
   handleTabChange = (event, value) => {
-    if(value === 1){
+    if (value === 1) {
       this.props.setFetching();
       getPayements()
         .then(response => {
           this.props.cancelFetching();
-          if(response.success){
+          if (response.success) {
             this.setState({
-              payments : response.payload
+              payments: response.payload
             });
           }
         })
@@ -65,16 +63,16 @@ class MainPanel extends Component {
     });
   };
 
-  componentDidMount(){
+  componentDidMount() {
     this.props.setSubtitleOfHeader('مدیریت');
 
   }
 
   render() {
-    const { classes } = this.props;
+    const {classes} = this.props;
     const {tabSelected} = this.state;
     return (
-      <Grid container direction={'column'} justify={'start-flex'} >
+      <Grid container direction={'column'} justify={'start-flex'}>
         <Tabs
           className={classes.tabs}
           indicatorColor="primary"
@@ -92,15 +90,19 @@ class MainPanel extends Component {
             <Grid container spacing={0}>
 
             </Grid>
-            <Button href={'/panel/newService'} fab variant="fab" color="primary" aria-label="add" className={classes.fab}>
-              <Add />
-            </Button>
+            <Tooltip title={'ثبت درخواست سرویس'} id={'tooltip-new-service'} placement={'top'}>
+              <Button href={'/panel/newService'} fab variant="fab" color="primary" aria-label="add"
+                      className={classes.fab}>
+                <Add/>
+              </Button>
+            </Tooltip>
           </div>
         ) : (
-          <Grid container direction={'column'} justify={'space-around'} alignItems={'stretch'} className={classes.paymentsContainer}>
-            {this.state.payments  && !this.props.fetching ? (
+          <Grid container direction={'column'} justify={'space-around'} alignItems={'stretch'}
+                className={classes.paymentsContainer}>
+            {this.state.payments && !this.props.fetching ? (
               this.state.payments.map(payment => (
-                <Grid xs={12}  className={classes.paymentItem}  children={<Payment {...payment}/>}/>
+                <Grid xs={12} className={classes.paymentItem} children={<Payment {...payment}/>}/>
               ))
             ) : null}
 
