@@ -10,6 +10,7 @@ import {cancelFetching, setFetching} from "../../../actions/fetch";
 import {setHeaderSubTitle} from "../../../actions/header";
 import {getCurrentService, getPayments} from '../../../utils/api';
 import Payment from "../../items/Payment";
+import CurrentService from "../../items/CurrentService";
 
 const style = theme => ({
   root: {
@@ -140,7 +141,14 @@ class MainPanel extends Component {
 
                 ) : (
                   /*here show current service*/
-                  null
+                  <Grid item xs={6}>
+
+                    <Paper elevation={10}>
+                      <Grid container spacing={8} justify={'center'} alignItems={'center'}>
+                        <CurrentService {...this.state.currentService}/>
+                      </Grid>
+                    </Paper>
+                  </Grid>
                 )
               ) : null}
 
