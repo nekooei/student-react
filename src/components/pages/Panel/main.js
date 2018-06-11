@@ -3,9 +3,9 @@
  */
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Button, Grid, Tab, Tabs, Tooltip} from "@material-ui/core";
+import {Button, Grid, Paper, Tab, Tabs, Tooltip, Typography} from "@material-ui/core";
 import {withStyles} from '@material-ui/core/styles';
-import {Add} from '@material-ui/icons';
+import {Add, NotInterested} from '@material-ui/icons';
 import {cancelFetching, setFetching} from "../../../actions/fetch";
 import {setHeaderSubTitle} from "../../../actions/header";
 import {getCurrentService, getPayments} from '../../../utils/api';
@@ -29,7 +29,7 @@ const style = theme => ({
     position: 'fixed',
 
   },
-  paymentsContainer: {
+  myContainer: {
     marginTop: 10,
     flex: 1
 
@@ -37,6 +37,12 @@ const style = theme => ({
   paymentItem: {
     margin: 5,
     flex: 1
+  },
+  notIcon: {
+    fontSize: 72
+  },
+  sectionTitle: {
+    marginBottom: 15
   }
 });
 
@@ -76,7 +82,16 @@ class MainPanel extends Component {
 
   componentDidMount() {
     this.props.setSubtitleOfHeader('مدیریت');
-
+    this.props.setFetching();
+    getCurrentService()
+      .then(response => {
+        this.props.cancelFetching();
+        if (response.success) {
+          this.setState({
+            currentService: response.payload
+          });
+        }
+      })
   }
 
   render() {
@@ -98,7 +113,37 @@ class MainPanel extends Component {
         </Tabs>
         {tabSelected === 0 ? (
           <div>
-            <Grid container spacing={0}>
+            <Grid direction={'column'} container spacing={0} justify={'center'} alignItems={'center'} className={classes.myContainer}>
+
+              <Typography className={classes.sectionTitle} align={'center'} variant={'display1'}>سرویس فعال</Typography>
+              {this.state.currentService && !this.props.fetching ? (
+                Object.keys(this.state.currentService).length === 0 ? (
+                  <Grid item xs={6}>
+
+                    <Paper elevation={10}>
+                      <Grid container spacing={8} justify={'center'} alignItems={'center'}>
+                        <NotInterested className={classes.notIcon} color={'error'}/>
+                        <Grid item xs={12} alignContent={'space-around'}>
+                          <Typography align={'center'} variant={'headline'}> در حال حاضر سرویس فعالی وجود
+                            ندارد.</Typography>
+                          <Typography align={'center'} variant={'body'}>لطفا درخواست سرویس جدیدی ثبت کنید.</Typography>
+                        </Grid>
+                        <Grid item xs={4}>
+                          <Button variant={'raised'} color={'primary'} fullWidth
+                                  onClick={() => this.props.history.push('/panel/newService')}>ثبت درخواست</Button>
+                        </Grid>
+
+
+                      </Grid>
+                    </Paper>
+                  </Grid>
+
+                ) : (
+                  /*here show current service*/
+                  null
+                )
+              ) : null}
+
 
             </Grid>
             <Tooltip title={'ثبت درخواست سرویس'} id={'tooltip-new-service'} placement={'top'}>
@@ -110,18 +155,18 @@ class MainPanel extends Component {
           </div>
         ) : (
           <Grid container direction={'row'} justify={'center'} alignItems={'center'}
-                className={classes.paymentsContainer}>
+                className={classes.myContainer}>
             {this.state.payments && !this.props.fetching ? (
-                <Grid xs={9} className={classes.paymentItem}>
-                  <Grid  container justify={'center'} alignItems={'center'} spacing={8}>
-                    {this.state.payments.map((payment, index) => (
-                      <Grid item xs={12}>
-                        <Payment {...payment} index={index+1}/>
-                      </Grid>
-                    ))}
+              <Grid xs={9} className={classes.paymentItem}>
+                <Grid container justify={'center'} alignItems={'center'} spacing={8}>
+                  {this.state.payments.map((payment, index) => (
+                    <Grid item xs={12}>
+                      <Payment {...payment} index={index + 1}/>
+                    </Grid>
+                  ))}
 
-                  </Grid>
                 </Grid>
+              </Grid>
 
             ) : null}
 
