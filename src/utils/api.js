@@ -128,7 +128,7 @@ export const createPayment = ({amount, serviceRequestId, gatewayId}) =>
     }
   ).then(data => data.json());
 
-export const getGetways = () =>
+export const getGateways = () =>
   fetch(
     getUrl('gateway'), {
       headers : getHeaders(true),
