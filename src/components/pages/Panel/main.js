@@ -8,6 +8,10 @@ import { withStyles } from '@material-ui/core/styles';
 import {Add} from '@material-ui/icons';
 import {cancelFetching, setFetching} from "../../../actions/fetch";
 import {setHeaderSubTitle} from "../../../actions/header";
+import {
+  getPayements
+} from '../../../utils/api';
+import Payment from "../../items/Payment";
 
 const style = theme => ({
   root: {
@@ -26,6 +30,15 @@ const style = theme => ({
     right: 'auto',
     position: 'fixed',
 
+  },
+  paymentsContainer:{
+    marginTop: 10,
+    flex: 1
+
+  },
+  paymentItem : {
+    margin: 5,
+    flex: 1
   }
 });
 
@@ -35,6 +48,18 @@ class MainPanel extends Component {
   };
 
   handleTabChange = (event, value) => {
+    if(value === 1){
+      this.props.setFetching();
+      getPayements()
+        .then(response => {
+          this.props.cancelFetching();
+          if(response.success){
+            this.setState({
+              payments : response.payload
+            });
+          }
+        })
+    }
     this.setState({
       tabSelected: value
     });
@@ -49,7 +74,7 @@ class MainPanel extends Component {
     const { classes } = this.props;
     const {tabSelected} = this.state;
     return (
-      <div >
+      <Grid container direction={'column'} justify={'start-flex'} >
         <Tabs
           className={classes.tabs}
           indicatorColor="primary"
@@ -72,11 +97,16 @@ class MainPanel extends Component {
             </Button>
           </div>
         ) : (
-          <div>
+          <Grid container direction={'column'} justify={'space-around'} alignItems={'stretch'} className={classes.paymentsContainer}>
+            {this.state.payments  && !this.props.fetching ? (
+              this.state.payments.map(payment => (
+                <Grid xs={12}  className={classes.paymentItem}  children={<Payment {...payment}/>}/>
+              ))
+            ) : null}
 
-          </div>
+          </Grid>
         )}
-      </div>
+      </Grid>
     );
   }
 }
