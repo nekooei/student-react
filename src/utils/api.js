@@ -1,7 +1,7 @@
 /**
  * Created by milad on 1/27/18.
  */
-const SERVER_IP_OR_ADDRESS = 'http://localhost:65000';
+const SERVER_IP_OR_ADDRESS = 'http://sapi.randoapp.ir';
 const SERVER_PORT = 65000;
 
 const getUrl = (route) => `${SERVER_IP_OR_ADDRESS}/v1/${route}`;

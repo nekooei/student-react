@@ -376,7 +376,7 @@ class NewService extends Component {
     }).then(response => {
       this.props.cancelFetching()
       if(response.success){
-        window.location = `http://sapi.development.sas/v1/payment/start/${response.payload.transId}`;
+        window.location = `http://sapi.randoapp.ir/v1/payment/start/${response.payload.transId}`;
       }
     })
   };
