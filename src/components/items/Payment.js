@@ -13,36 +13,23 @@ const style = theme => ({
 
 class Payment extends Component {
   render() {
-    const {classes, verified, gatewayTitle, amount, factorNum, createdAt} = this.props;
+    const {classes, verified, gatewayTitle, amount, factorNum, createdAt, index} = this.props;
     const createdAtString = momentjalali(createdAt).format('jYYYY/jM/jD HH:mm');
     return (
       <Grid container
             direction={'row'}
-            justify={'flex-start'}
-            alignItems={'stretch'}
+            justify={'center'}
+            alignItems={'center'}
       >
         <Grid item
               xs={12}
               md={12}>
           <Paper elevation={12}>
-            <Grid container direction={'row'} spacing={0} justify={'flex-start'} alignItems={'center'}>
-              {!verified ? (
-                <Grid item xs={1} md={1}>
-                  <Tooltip id="tooltip-top" title="بررسی پرداخت" placement="top">
-                    <IconButton>
-                      <Refresh color={'error'}/>
-                    </IconButton>
-                  </Tooltip>
-                </Grid>
-              ) : (
-                <Grid item sm={1} md={1}>
-                  <Tooltip id="tooltip-top" title="پرداخت تایید شده" placement="top">
-                    <IconButton disableRipple>
-                      <CheckCircle color={'primary'}/>
-                    </IconButton>
-                  </Tooltip>
-                </Grid>
-              )}
+            <Grid container direction={'row'} spacing={0} justify={'center'} alignItems={'center'}>
+
+              <Grid item sm={1} md={1}>
+                <Typography>{index}#</Typography>
+              </Grid>
 
               <Grid item sm={4} md={2}>
                 <Typography className={classes.typo}>مبلغ: {amount} (ریال)</Typography>
@@ -50,15 +37,33 @@ class Payment extends Component {
               <Grid item sm={4} md={2}>
                 <Typography className={classes.typo}>درگاه: {gatewayTitle}</Typography>
               </Grid>
-              <Grid item sm={4} md={2}>
+              <Grid item sm={4} md={3}>
                 <Typography color={'primary'} className={classes.typo}>شماره فاکتور: {factorNum}</Typography>
               </Grid>
 
               <Grid item sm={4} md={2}>
                 <Typography className={classes.typo}>تاریخ: {createdAtString}</Typography>
               </Grid>
+              {!verified ? (
+                <Grid item xs={1} md={1}>
+                  <Tooltip id="tooltip-top" title="بررسی پرداخت" placement="left">
+                    <IconButton>
+                      <Refresh color={'error'}/>
+                    </IconButton>
+                  </Tooltip>
+                </Grid>
+              ) : (
+                <Grid item sm={1} md={1}>
+                  <Tooltip id="tooltip-top" title="پرداخت تایید شده" placement="left">
+                    <IconButton disableRipple>
+                      <CheckCircle color={'primary'}/>
+                    </IconButton>
+                  </Tooltip>
+                </Grid>
+              )}
 
             </Grid>
+
 
 
           </Paper>

@@ -8,7 +8,7 @@ import {withStyles} from '@material-ui/core/styles';
 import {Add} from '@material-ui/icons';
 import {cancelFetching, setFetching} from "../../../actions/fetch";
 import {setHeaderSubTitle} from "../../../actions/header";
-import {getPayments} from '../../../utils/api';
+import {getCurrentService, getPayments} from '../../../utils/api';
 import Payment from "../../items/Payment";
 
 const style = theme => ({
@@ -57,6 +57,17 @@ class MainPanel extends Component {
             });
           }
         })
+    } else if (value === 0) {
+      this.props.setFetching();
+      getCurrentService()
+        .then(response => {
+          this.props.cancelFetching();
+          if (response.success) {
+            this.setState({
+              currentService: response.payload
+            });
+          }
+        })
     }
     this.setState({
       tabSelected: value
@@ -98,12 +109,20 @@ class MainPanel extends Component {
             </Tooltip>
           </div>
         ) : (
-          <Grid container direction={'column'} justify={'space-around'} alignItems={'stretch'}
+          <Grid container direction={'row'} justify={'center'} alignItems={'center'}
                 className={classes.paymentsContainer}>
             {this.state.payments && !this.props.fetching ? (
-              this.state.payments.map(payment => (
-                <Grid xs={12} className={classes.paymentItem} children={<Payment {...payment}/>}/>
-              ))
+                <Grid xs={9} className={classes.paymentItem}>
+                  <Grid  container justify={'center'} alignItems={'center'} spacing={8}>
+                    {this.state.payments.map((payment, index) => (
+                      <Grid item xs={12}>
+                        <Payment {...payment} index={index+1}/>
+                      </Grid>
+                    ))}
+
+                  </Grid>
+                </Grid>
+
             ) : null}
 
           </Grid>
