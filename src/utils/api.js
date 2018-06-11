@@ -144,3 +144,11 @@ export const getPayments = () =>
       method: 'GET'
     }
   ).then(data => data.json());
+
+export const getCurrentService = () =>
+  fetch(
+    getUrl('student/currentService'), {
+      headers: getHeaders(true),
+      method: 'GET'
+    }
+  ).then(data => data.json());
