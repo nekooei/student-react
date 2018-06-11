@@ -8,7 +8,7 @@ import {withStyles} from '@material-ui/core/styles';
 import {Add} from '@material-ui/icons';
 import {cancelFetching, setFetching} from "../../../actions/fetch";
 import {setHeaderSubTitle} from "../../../actions/header";
-import {getPayements} from '../../../utils/api';
+import {getPayments} from '../../../utils/api';
 import Payment from "../../items/Payment";
 
 const style = theme => ({
@@ -48,7 +48,7 @@ class MainPanel extends Component {
   handleTabChange = (event, value) => {
     if (value === 1) {
       this.props.setFetching();
-      getPayements()
+      getPayments()
         .then(response => {
           this.props.cancelFetching();
           if (response.success) {
