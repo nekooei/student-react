@@ -7,7 +7,7 @@ import {
   createPayment,
   createServiceRequest,
   getDistance,
-  getGetways,
+  getGateways,
   getOpenTermOfSchool,
   getPrice,
   getSchools,
@@ -351,7 +351,7 @@ class NewService extends Component {
           this.setState({
             serviceRequest: response.payload
           }, () => {
-            getGetways()
+            getGateways()
               .then(response => {
                 if (response.success) {
                   this.props.cancelFetching();
