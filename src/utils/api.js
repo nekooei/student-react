@@ -1,6 +1,7 @@
 /**
  * Created by milad on 1/27/18.
  */
+import fetch from './fetchWithTimeout';
 const SERVER_IP_OR_ADDRESS = 'http://localhost:65000';
 const SERVER_PORT = 65000;
 
@@ -152,3 +153,12 @@ export const getCurrentService = () =>
       method: 'GET'
     }
   ).then(data => data.json());
+
+export const registerStudent = (information) =>
+  fetch(
+    getUrl('student/register'), {
+      headers: getHeaders(false),
+      body: JSON.stringify(information),
+      method: 'POST'
+    }
+  ).then(data => data.json())
