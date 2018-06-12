@@ -15,10 +15,11 @@ import {cancelFetching, setFetching} from "../../actions/fetch";
 import {setHeaderSubTitle} from "../../actions/header";
 import GenderSelector from "../items/GenderSelector";
 
-import jMoment from 'jalali-moment';
+import jMoment from 'moment-jalaali';
 import Marker from "../items/Marker";
 import PersianDatePicker from "../items/PersianDatePicker";
 import {setSnackBar} from "../../actions/ui";
+import {registerStudent} from '../../utils/api';
 
 
 
@@ -56,6 +57,9 @@ const style = theme => ({
   },
   mapContainer: {
     height: 400
+  },
+  map:{
+    height: '100%'
   }
 });
 
@@ -85,7 +89,7 @@ class Register extends Component {
         nationalCode: localStorage.nationalCode,
         gender: 0,
         birthPlace: '',
-        birthDate: '',
+        birthDate: jMoment(new Date()).format('jYYYYjMMjDD'),
         description: '',
         mobileNumber: ''
       },
@@ -97,6 +101,7 @@ class Register extends Component {
       addressInformation : {
         address: '',
         phoneNumber: '',
+        postCode: '',
         homeLocation: '',
         homeGeometric: {
           lat: '',
@@ -217,6 +222,16 @@ class Register extends Component {
     }));
   }
 
+  postCodeChange(postCode){
+    this.setState( prevState => ({
+      ...prevState,
+      addressInformation: {
+        ...prevState.addressInformation,
+        postCode: postCode
+      }
+    }));
+  }
+
   locationChange(lat, lng){
     console.log(lat, lng);
     this.setState({
@@ -282,7 +297,7 @@ class Register extends Component {
                   id={'birthDate'}
                   disableFuture
                   required
-                  labelFunc={date => (date ? date.format('jYYYY/jMM/jDD') : '')}
+                  labelFunc={date => (date ? date.format('jYYYY/jM/jD') : '')}
                   onChange={this.handleDateChange}
                   value={this.state.selectedDate}
                 />
@@ -350,6 +365,14 @@ class Register extends Component {
                                                           label={'شماره تلفن ثابت'} className={classes.input} />}/>
                 </FormControl>
 
+                <FormControl margin={'root'} fullWidth >
+                  <FormControlLabel name={"postCode"} control={ <TextField  name={'postCode'}
+                                                          id={'postCode'}
+                                                          onChange={(event) => this.postCodeChange(event.target.value)}
+                                                          value={this.state.addressInformation.postCode}
+                                                          label={'کد پستی'} className={classes.input} />}/>
+                </FormControl>
+
               </Grid>
             </Grid>
             <Grid container
@@ -361,6 +384,7 @@ class Register extends Component {
                 <GoogleMap
                   bootstrapURLKeys={{ key: [GOOGLE_MAP_KEY] }}
                   defaultCenter= {{lat: 29.610734, lng:  52.492431}}
+                  className={classes.map}
                   defaultZoom={12}
                   onClick={({x, y, lat, lng, event}) => this.locationChange(lat, lng)}
                 >
@@ -460,24 +484,13 @@ class Register extends Component {
     switch(this.state.activeStep){
       case 0:
         if(!this.isBasicInformationValid()){
-          this.setState({
-            snackbar: {
-              isOpen : true,
-              message: 'لطفا اطلاعات را کامل وارد کنید'
-            }
-          });
+          this.props.showSnackBar('لطفا اطلاعات را کامل وارد کنید')
           return;
         }
         break;
-
       case 1:
         if(!this.isUserInformationValid()){
-          this.setState({
-            snackbar: {
-              isOpen : true,
-              message: 'لطفا اطلاعات را کامل وارد کنید'
-            }
-          });
+          this.props.showSnackBar('لطفا اطلاعات را کامل وارد کنید')
           return;
         }
         break;
@@ -497,6 +510,25 @@ class Register extends Component {
      */
     if (completed.size !== this.totalSteps() - this.skippedSteps()) {
       this.handleNext();
+    }else {
+      this.handleNext();
+      registerStudent({...this.state.basicInformation, ...this.state.userInformation, ...this.state.addressInformation})
+        .then(response => {
+          this.props.cancelFetching();
+          if(response.success){
+            this.props.showSnackBar('ثبت نام با موفقیت انجام شد!');
+            this.props.history.push('/');
+          }else {
+            this.props.showSnackBar('عملیات با خطا مواجه شد!');
+            console.log(response)
+          }
+
+        }).catch(error => {
+          console.log(error);
+          this.props.cancelFetching();
+          this.props.showSnackBar('عملیات با خطا مواجه شد!');
+
+      })
     }
   };
 
